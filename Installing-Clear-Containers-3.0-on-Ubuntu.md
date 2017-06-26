@@ -38,7 +38,6 @@ sudo apt-get update
 sudo apt-get install -y cc-runtime cc-proxy cc-shim virtcontainers-pause
 ```
 
-
 ## Configure docker to use Clear Containers by default
 ```
 sudo mkdir -p /etc/systemd/system/docker.service.d/
