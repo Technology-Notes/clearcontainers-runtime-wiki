@@ -1,1 +1,2 @@
-- FIXME
+- docker device support (--device)
+- docker volume support (-v)
