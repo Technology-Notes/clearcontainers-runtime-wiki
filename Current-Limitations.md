@@ -25,11 +25,13 @@ We currently only setup the VM network configuration with what is defined by the
 
 OCI Annotations are supported, but the OCI specification is not clear on their purpose. Note that the annotaitons are not exposed inside the Clear Container.
 
-## No `checkpoint` and `restore` commands
+## Missing runtime commands
+
+### `checkpoint` and `restore`
 
 Although the runtime provides stub implementations of these commands, this is currently purely to satisfy Docker - the commands do *NOT* save/restore the state of the Clear Container.
 
-## No `ps` command
+### `ps` command
 
 See https://github.com/clearcontainers/runtime/issues/95.
 
