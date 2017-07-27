@@ -35,6 +35,13 @@ Although the runtime provides stub implementations of these commands, this is cu
 
 See https://github.com/clearcontainers/runtime/issues/95.
 
+## Others
+
+- `init`
+- `events`
+- `spec`
+- `update`
+
 ## CPU and memory
 
 The following items are not supported:
