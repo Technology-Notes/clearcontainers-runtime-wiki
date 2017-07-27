@@ -7,10 +7,6 @@ The following documents the known limitations of `cc-runtime`:
 
 ## Networking
 
-### Connecting a container network to another
-
-- network connect 
-
 ### Unsupported network types
 
 - host network support (`docker --net=host run ...`)
