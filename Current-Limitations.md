@@ -37,8 +37,8 @@ See https://github.com/clearcontainers/runtime/issues/95.
 
 ## Others
 
-- `init`
 - `events`
+- `init`
 - `spec`
 - `update`
 
