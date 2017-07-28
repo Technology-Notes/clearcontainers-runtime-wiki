@@ -3,7 +3,9 @@ The following documents the known limitations of `cc-runtime`:
 ## Sharing host resources
 
 - host device support (`docker run --device ...`)
+
 - volume support for devices (`docker run -v /dev/foo ...`)
+  Note that non-device files are supported.
 
 ## Networking
 
