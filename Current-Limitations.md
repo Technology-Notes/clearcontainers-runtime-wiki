@@ -23,7 +23,7 @@ We currently only setup the VM network configuration with what is defined by the
 
 ## Annotations
 
-OCI Annotations are supported, but the OCI specification is not clear on their purpose. Note that the annotaitons are not exposed inside the Clear Container.
+OCI Annotations are nominally supported, but the OCI specification is not clear on their purpose. Note that the annotations are not exposed inside the Clear Container.
 
 ## Missing runtime commands
 
