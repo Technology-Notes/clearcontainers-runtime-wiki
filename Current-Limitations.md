@@ -54,3 +54,8 @@ The following items are not supported:
 ## Resource Management (container QoS)
 
 - shared memory size (`docker run --shm-size ...`)
+- cgroup constraints are not currently applied to the workload. This is difficult problem since they constraints can be applied in various places including:
+  - The hypervisor process.
+  - The `cc-shim` process that represents the workload.
+  - The real workload running inside the virtual machine.
+  There is work underway to solve this issue.
