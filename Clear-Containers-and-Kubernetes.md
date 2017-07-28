@@ -347,7 +347,8 @@ sudo rm -rf /var/log/crio/*
 sudo rm -rf /var/lib/kubelet/*
 sudo rm -rf /run/flannel/*
 sudo rm -rf /etc/cni/net.d/*
-#sudo rm -rf /var/lib/containers/storage
+sudo rm -rf /var/lib/virtcontainers/pods/*
+sudo rm -rf /var/run/virtcontainers/pods/*
 sudo ifconfig cni0 down
 sudo ifconfig cbr0 down
 sudo ifconfig flannel.1 down
@@ -356,12 +357,11 @@ sudo ip link del cni0
 sudo ip link del cbr0
 sudo ip link del flannel.1
 sudo ip link del docker0
-sudo journalctl --rotate
-sudo journalctl --vacuum-time=1seconds
+
 
 sudo systemctl start docker
 sudo systemctl start crio
-#sudo systemctl start kubelet
+sudo systemctl start cc-proxy
 
 
 mkdir -p /var/lib/cni
