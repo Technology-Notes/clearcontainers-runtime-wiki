@@ -1,6 +1,30 @@
+Running Kubernetes on top of Clear Containers 3.0
+=================
+
 # Overview
 
 This documents how to get Kubernetes running with Clear Containers using CRIO.
+
+## Kubernetes
+[Kubernetes](https://kubernetes.io/docs/whatisk8s/) is a Google project and the dominant container orchestration engine.
+
+Kubernetes clusters run [containers pods](https://kubernetes.io/docs/user-guide/pods/). Inside a pod, all containers share the pod resources (networking, storage, etc...) and all pods within a cluster have their own IP address.
+
+By default Kubernetes runs the full Docker stack to start pods and containers within a pod. Rkt is an alternative container runtime for Kubernetes.
+
+## Problem statement
+A Docker controlled Clear Container will start one VM per container. Providing the kubernetes pod semantics with one VM per container is very challenging, especially from a networking standpoint.
+Instead Clear Containers should be able to start one VM per pod and launch containers within those VMs/Pods.
+
+## Solution
+With the recent addition of [the Container Runtime Interface (CRI)](http://blog.kubernetes.io/2016/12/container-runtime-interface-cri-in-kubernetes.html) to Kubernetes, Clear Containers can now be controlled by any OCI compatible CRI implementation and get passed container annotations to let it know when and how to run Pod VMs or container workload within those VMs.
+
+[CRI-O](https://github.com/kubernetes-incubator/cri-o) is the main OCI compatible CRI implementation and now supports Clear Containers.
+
+## Clear Containers as a bare metal runtime for Kubernetes
+
+We are going to describe how to deploy a bare metal Kubernetes cluster that uses Clear Containers as its container runtime and CRI-O as its CRI server.
+
 
 # Base OS
 
