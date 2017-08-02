@@ -388,12 +388,12 @@ sudo systemctl start crio
 sudo systemctl start cc-proxy
 
 
-mkdir -p /var/lib/cni
-mkdir -p /var/run/crio
-mkdir -p /var/log/crio
-mkdir -p /var/lib/kubelet
-mkdir -p /run/flannel
-mkdir -p /etc/cni/net.d
+sudo mkdir -p /var/lib/cni
+sudo mkdir -p /var/run/crio
+sudo mkdir -p /var/log/crio
+sudo mkdir -p /var/lib/kubelet
+sudo mkdir -p /run/flannel
+sudo mkdir -p /etc/cni/net.d
 sudo -E kubeadm init --pod-network-cidr 10.244.0.0/16
 export KUBECONFIG=/etc/kubernetes/admin.conf
 
