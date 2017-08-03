@@ -1,14 +1,12 @@
-# Clear Containers
+# Clear Containers known differences and limitations
 
-# WIP
-
-cc-runtime has a number of differences and limitations compared with standard Docker. Some of these limitations have solutions, whereas others exist due to fundamentally different architectural differences related to the use of Virtual Machines.
+The Clear Containers `cc-runtime` has a number of differences and limitations when compared with the standard Docker runtime - `runc`. Some of these limitations have potential solutions, whereas others exist due to fundamentally different architectural differences generally related to the use of Virtual Machines.
 
 The below sections describe in brief the known limitations, and where applicable further link off to the relevant open Issues or pages with more detailed information.
 
 ## Pending items
 
-This section lists items that should technically be fixable:
+This section lists items that may technically be fixable:
 
 ### Networking
 
@@ -16,7 +14,7 @@ This section lists items that should technically be fixable:
 
 The runtime doesn't support adding networks to an already running container (`docker network connect`).
 
-We currently only setup the VM network configuration with what is defined by the CNM plugin at startup time. It would be possible to watch the networking namespace to discover and propagate new networks at runtime but it's not implemented today (tracked in issue [\#388](https://github.com/01org/cc-oci-runtime/issues/388)).
+The VM network configuration is set up with what is defined by the CNM plugin at startup time. It would be possible to watch the networking namespace on the host to discover and propagate new networks at runtime but, it is not implemented today (tracked in issue [\#388](https://github.com/01org/cc-oci-runtime/issues/388)).
 
 #### Support for joining an existing VM `docker run --net=containers`)
 
@@ -26,16 +24,15 @@ What is this? Is this the same as adding networks dynamically??
 
 ### Resource management
 
-The following items are not supported:
-- Unconstrained memory and CPU containers
-- `docker run -m MEMORY`
-- `docker run --cpus=`
-- `docker update`
-
 Due to the way VMs differ in their CPU and memory allocation and sharing across the host system, the implementation of an equivalent method for these commands is potentially challenging.
 
-Some commands are theoretically not too difficult (for instance, the `-m MEMORY` command could filter through to configure the  QEMU `-m` memory configuration line, as could the `--cpus` for instance.
-For `docker update`, also see the `runtime commands` section of this document.
+#### `docker run -m`
+The `docker run -m MEMORY` option is not currently supported. It should be feasible to pass the relevant information through to the QEMU `-m` memory size option. This is also related to the `docker update` command.
+[\#381](https://github.com/clearcontainers/runtime/issues/381)
+
+#### `docker run --cpus=`
+The `docker run --cpus=` option is not currently implemented. It should be possible to pass this information through to the QEMU command line CPU configuration options.
+[\#341](https://github.com/clearcontainers/runtime/issues/341)
 
 #### shm
 
@@ -43,16 +40,20 @@ The runtime does not implement the `docker run --shm-size` command to set the si
 
 #### cgroup constraints
 
-(**FIXME** - how are these configured/requested - are these already covered by the sub-parts of 'docker update'?)
+(**FIXME** - how are these configured/requested - are these already covered by the sub-parts of `docker update`?)
 cgroup constraints are not currently applied to the workload. This is difficult problem since they constraints can be applied in various places including:
 
 - The hypervisor process.
 - The cc-shim process that represents the workload.
-- The real workload running inside the virtual machine. There is work underway to solve this issue.
+- The real workload running inside the virtual machine.
+
+There is work underway to solve this issue.
 
 #### Capabilities
 
-The 'docker run --cap-[add|drop]` commands are not supported by the runtime. Similar to the cgroup items, these capabilities could be modified either in the host, in the VM, or potentially both.
+The `docker run --cap-[add|drop]` commands are not supported by the runtime. Similar to the cgroup items, these capabilities could be modified either in the host, in the VM, or potentially both.
+
+[\#51](https://github.com/clearcontainers/runtime/issues/51) is related.
 
 #### sysctl
 
@@ -74,6 +75,8 @@ There is some more background and information in the `cc-oci-runtime` Issue [\#2
 
 The `docker stats` command does not return meaningful information for Clear Container containers at present.
 Some thought needs to go into if we display information pure from within the VM, or if the information relates to the resource usage of the whole VM container as based from the host. The latter is likely more useful from a whole system point of view.
+
+[\#200](https://github.com/clearcontainers/runtime/issues/200) is related.
 
 ### runtime commands
 
