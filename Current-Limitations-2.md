@@ -2,6 +2,8 @@
 
 The Clear Containers `cc-runtime` has a number of differences and limitations when compared with the standard Docker runtime - `runc`. Some of these limitations have potential solutions, whereas others exist due to fundamentally different architectural differences generally related to the use of Virtual Machines.
 
+The Clear Container runtime launches each container within its own hardware isolated virtual machine. And each virtual machine has its own kernel. Due to this higher degree of isolation, there are certain container capabilities that cannot be supported.
+
 The below sections describe in brief the known limitations, and where applicable further link off to the relevant open Issues or pages with more detailed information.
 
 ## Pending items
