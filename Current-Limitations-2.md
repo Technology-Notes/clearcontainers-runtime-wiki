@@ -18,9 +18,8 @@ The VM network configuration is set up with what is defined by the CNM plugin at
 
 #### Support for joining an existing VM `docker run --net=containers`)
 
-**FIXME**
+Docker supports the ability for containers to join another containers namespace. This allows multiple containers to share a common network namespace and the network interfaces placed in the network namespace. Clear Containers does not support network namespace sharing. If a Clear Container is setup to share the network namespace of a runc container, the runtime effectively takes over all the network interfaces assigned to the namespace and binds them to the virtual machine. So the runc container will lose its network connectivity. 
 
-What is this? Is this the same as adding networks dynamically??
 
 ### Resource management
 
@@ -57,7 +56,7 @@ The `docker run --cap-[add|drop]` commands are not supported by the runtime. Sim
 
 #### sysctl
 
-The `docker run --sysctl` feature is not implemented. These kernel settings could take place on either the host or VM kernel. Given that sysctl settings are global (afaict they are not yet namespaced - if somebody knows differently then please post that info here), it may either make sense to just set them on the host kernel, or it may make sense from a security and isolation pov to set them in the VM (effectively isolating sysctl settings). Given this option is part of `run`, it almost feels like it should be 'per-container', and thus setting them in the VM may be a sensible option.
+The `docker run --sysctl` feature is not implemented. Docker allows setting of sysctl settings that support namespacing.  It may make sense from a security and isolation pov to set them in the VM (effectively isolating sysctl settings). Also given that each Clear Container has its own kernel, we can support setting of sysctl settings that are not namespaced. In some cases, we may need to support setting some of the settings both on the host side Clear Container namespace as well as the Clear Containers kernel.
 
 #### tmpfs
 
@@ -92,7 +91,7 @@ Note, this is *not* the same as the `docker ps` command. The runtime ps command 
 
 The runtime does not currently implement the `events` command. We may not be able to perfectly match every sub-part of the `runc` events command, but we can probably do a subset, and maybe add some VM specific extensions.
 
-See here for the [runc implementaiton](https://github.com/opencontainers/runc/blob/e775f0fba3ea329b8b766451c892c41a3d49594d/events.go)
+See here for the [runc implementation](https://github.com/opencontainers/runc/blob/e775f0fba3ea329b8b766451c892c41a3d49594d/events.go)
 
 See [\#379](https://github.com/clearcontainers/runtime/issues/379) for more information.
 
@@ -126,7 +125,7 @@ See more documents at [docs.docker.com](https://docs.docker.com/engine/userguide
 
 #### `docker --device`
 
-host device support (`docker run --device`) is not supported. This could be mapped to the quite similar QEMU `-device` option to enact device passthrough, but the QEMU option requires precise knowledge of which sort of device is being mapped, and that information is not necessarily easily available from the docker `--device` command.
+host device support (`docker run --device`) is not supported. This could be mapped to the quite similar QEMU `-device` option to enact device passthrough if that particular device is supported by VFIO, but the QEMU option requires precise knowledge of which sort of device is being mapped, and that information is not necessarily easily available from the docker `--device` command.
 
 #### `docker -v /dev/...`
 
