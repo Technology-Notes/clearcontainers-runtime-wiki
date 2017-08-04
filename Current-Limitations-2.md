@@ -115,6 +115,8 @@ This section lists items that may not be fixed due to fundamental architectural 
 
 Docker host network support (`docker --net=host run`) is not supported. It is not possible to directly access the host networking configuration from within the VM.
 
+`--net=host` can still be used with `runc` containers and inter-mixed with with running `cc-runtime` containers, thus still enabling use of `--net=host` when necessary.
+
 It should be noted, currently passing the `--net=host` option into a Clear Container may result in the Clear Container networking setup modifying, re-configuring and therefore possibly breaking the host networking setup. Do not use `--host=net` with Clear Containers.
 
 #### `docker run --link`
@@ -135,7 +137,9 @@ Docker volume support for devices (`docker run -v /dev/foo`) is not supported fo
 
 #### `docker run --privileged`
 
-The `docker run --privileged` command is not supported in the runtime. There is no natural or easy way to grant the VM access to all of the host devices that this command would need to be complete. 
+The `docker run --privileged` command is not supported in the runtime. There is no natural or easy way to grant the VM access to all of the host devices that this command would need to be complete.
+
+`--privileged` can still be used with `runc` containers and inter-mixed with with running `cc-runtime` containers, thus still enabling use of `--privileged` when necessary.
 
 ### Other
 
