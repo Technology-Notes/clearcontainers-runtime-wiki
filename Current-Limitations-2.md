@@ -83,7 +83,7 @@ Some thought needs to go into if we display information pure from within the VM,
 
 #### ps command
 
-The Clear Containers runtime does not currently support the 'ps' command.
+The Clear Containers runtime does not currently support the `ps` command.
 
 See [\#95](https://github.com/clearcontainers/runtime/issues/95) for more information.
 
