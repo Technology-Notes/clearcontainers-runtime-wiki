@@ -31,7 +31,7 @@ The `docker run -m MEMORY` option (the OCI `linux.resources.memory` configuratio
 [\#381](https://github.com/clearcontainers/runtime/issues/381)
 
 #### `docker run --cpus=`
-The `docker run --cpus=` option is not currently implemented. It should be possible to pass this information through to the QEMU command line CPU configuration options to gain a similar effect.
+The `docker run --cpus=` option (the OCI `linux.resources.cpu` configuration option) is not currently implemented. It should be possible to pass this information through to the QEMU command line CPU configuration options to gain a similar effect.
 [\#341](https://github.com/clearcontainers/runtime/issues/341)
 
 #### shm
