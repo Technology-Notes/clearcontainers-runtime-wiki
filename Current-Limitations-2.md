@@ -27,7 +27,7 @@ Docker supports the ability for containers to join another containers namespace.
 Due to the way VMs differ in their CPU and memory allocation and sharing across the host system, the implementation of an equivalent method for these commands is potentially challenging.
 
 #### `docker run -m`
-The `docker run -m MEMORY` option is not currently supported. It should be feasible to pass the relevant information through to the QEMU `-m` memory size option. This is also related to the `docker update` command.
+The `docker run -m MEMORY` option (the OCI `linux.resources.memory` configuration option) is not currently supported. It should be feasible to pass the relevant information through to the QEMU `-m` memory size option. This is also related to the `docker update` command.
 [\#381](https://github.com/clearcontainers/runtime/issues/381)
 
 #### `docker run --cpus=`
