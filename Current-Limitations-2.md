@@ -34,6 +34,9 @@ The `docker run -m MEMORY` option is not currently supported. At the runtime lev
 The `docker run --cpus=` option is not currently implemented. At the runtime level, this equates to the `linux.resources.cpu` OCI configuration. It should be possible to pass this information through to the QEMU command line CPU configuration options to gain a similar effect.
 [\#341](https://github.com/clearcontainers/runtime/issues/341)
 
+#### `docker run --kernel-memory=`
+The `docker run --kernel-memory=` option is not currently implemented. It should be possible to pass this information through to the QEMU command line CPU configuration options to gain a similar effect.
+
 #### shm
 
 The runtime does not implement the `docker run --shm-size` command to set the size of the `/dev/shm tmpfs` size within the container. It should be possible to pass this configuration value into the VM container and have the appropriate mount command happen at launch time.
