@@ -72,14 +72,17 @@ The runtime does not provide `checkpoint` and `restore` commands. There have bee
 
 There is some more background and information in the `cc-oci-runtime` Issue [\#22](https://github.com/01org/cc-oci-runtime/issues/22).
 
-Note that `checkpoint` and `restore` commands are not required by the OCI standard.
+Note that the OCI standard does not specify `checkpoint` and `restore` commands.
 
 #### `docker stats`
 
-The `docker stats` command does not return meaningful information for Clear Containers at present.
+The `docker stats` command does not return meaningful information for Clear Containers at present. This requires the runtime to support the `events` command.
+
 Some thought needs to go into if we display information purely from within the VM, or if the information relates to the resource usage of the whole VM container as viewed from the host. The latter is likely more useful from a whole system point of view.
 
 [\#200](https://github.com/clearcontainers/runtime/issues/200) is related.
+
+Note that the OCI standard does not specify an `events` command.
 
 ### runtime commands
 
