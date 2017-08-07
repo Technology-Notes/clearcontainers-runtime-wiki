@@ -40,14 +40,15 @@ The runtime does not implement the `docker run --shm-size` command to set the si
 
 #### cgroup constraints
 
-(**FIXME** - how are these configured/requested - are these already covered by the sub-parts of `docker update`?)
-cgroup constraints are not currently applied to the workload. This is difficult problem since they constraints can be applied in various places including:
+Docker supports cgroup setup and manipulation generally through the `run` and `update` commands. With the use of VMs in Clear Containers, the mapping of cgroup functionality to VM functionality is not always straight forward.
 
-- The hypervisor process.
-- The cc-shim process that represents the workload.
-- The real workload running inside the virtual machine.
+For information on specific support, see the relevant sub-sections within this document.
 
-There is work underway to solve this issue.
+Generally, support can come down to a number of methods:
+- Implement support inside the VM/container
+- Implement support wrapped around the VM/container
+- Potentially a combination or sub-set of both inside and outside the VM/container
+- No implementation necessary, as the VM naturally provides equivalent functionality
 
 #### Capabilities
 
