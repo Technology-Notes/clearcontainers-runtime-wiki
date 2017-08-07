@@ -27,11 +27,11 @@ Docker supports the ability for containers to join another containers namespace.
 Due to the way VMs differ in their CPU and memory allocation and sharing across the host system, the implementation of an equivalent method for these commands is potentially challenging.
 
 #### `docker run -m`
-The `docker run -m MEMORY` option (the OCI `linux.resources.memory` configuration option) is not currently supported. It should be feasible to pass the relevant information through to the QEMU `-m` memory size option. This is also related to the `docker update` command.
+The `docker run -m MEMORY` option is not currently supported. At the runtime level, this equates to the `linux.resources.memory` OCI configuration. It should be feasible to pass the relevant information through to the QEMU `-m` memory size option. This is also related to the `docker update` command.
 [\#381](https://github.com/clearcontainers/runtime/issues/381)
 
 #### `docker run --cpus=`
-The `docker run --cpus=` option (the OCI `linux.resources.cpu` configuration option) is not currently implemented. It should be possible to pass this information through to the QEMU command line CPU configuration options to gain a similar effect.
+The `docker run --cpus=` option is not currently implemented. At the runtime level, this equates to the `linux.resources.cpu` OCI configuration. It should be possible to pass this information through to the QEMU command line CPU configuration options to gain a similar effect.
 [\#341](https://github.com/clearcontainers/runtime/issues/341)
 
 #### shm
@@ -52,13 +52,13 @@ Generally, support can come down to a number of methods:
 
 #### Capabilities
 
-The `docker run --cap-[add|drop]` commands are not supported by the runtime. Similar to the cgroup items, these capabilities could be modified either in the host, in the VM, or potentially both.
+The `docker run --cap-[add|drop]` commands are not supported by the runtime. At the runtime level, this equates to the `linux.process.capabilities` OCI configuration. Similar to the cgroup items, these capabilities could be modified either in the host, in the VM, or potentially both.
 
 [\#51](https://github.com/clearcontainers/runtime/issues/51) is related.
 
 #### sysctl
 
-The `docker run --sysctl` feature is not implemented. Docker allows setting of sysctl settings that support namespacing.  It may make sense from a security and isolation pov to set them in the VM (effectively isolating sysctl settings). Also given that each Clear Container has its own kernel, we can support setting of sysctl settings that are not namespaced. In some cases, we may need to support setting some of the settings both on the host side Clear Container namespace as well as the Clear Containers kernel.
+The `docker run --sysctl` feature is not implemented. At the runtime level, this equates to the `linux.sysctl` OCI configuration. Docker allows setting of sysctl settings that support namespacing. It may make sense from a security and isolation pov to set them in the VM (effectively isolating sysctl settings). Also given that each Clear Container has its own kernel, we can support setting of sysctl settings that are not namespaced. In some cases, we may need to support setting some of the settings both on the host side Clear Container namespace as well as the Clear Containers kernel.
 
 #### tmpfs
 
