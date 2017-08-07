@@ -110,6 +110,8 @@ The runtime does not currently implement the `update` command, and hence does no
 
 It may be possible to implement some of the update functionality by adjusting cgroups either around the VM or inside the container VM itself, or possibly by some other VM functional equivalent. It needs more investigation.
 
+Note that the OCI standard does not specify an `update` command.
+
 See [\#380](https://github.com/clearcontainers/runtime/issues/380) for more details.
 
 ## Architectural limitations
