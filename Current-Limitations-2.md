@@ -36,6 +36,7 @@ The `docker run --cpus=` option is not currently implemented. At the runtime lev
 
 #### `docker run --kernel-memory=`
 The `docker run --kernel-memory=` option is not currently implemented. It should be possible to pass this information through to the QEMU command line CPU configuration options to gain a similar effect.
+[\#388](https://github.com/clearcontainers/runtime/issues/388)
 
 #### shm
 
