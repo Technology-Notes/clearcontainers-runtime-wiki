@@ -18,10 +18,6 @@ The runtime does not currently support adding networks to an already running con
 
 The VM network configuration is set up with what is defined by the CNM plugin at startup time. It would be possible to watch the networking namespace on the host to discover and propagate new networks at runtime but, it is not implemented today (tracked in issue [\#388](https://github.com/01org/cc-oci-runtime/issues/388)).
 
-#### Support for joining an existing VM `docker run --net=containers`)
-
-Docker supports the ability for containers to join another containers namespace. This allows multiple containers to share a common network namespace and the network interfaces placed in the network namespace. Clear Containers does not support network namespace sharing. If a Clear Container is setup to share the network namespace of a `runc` container, the runtime effectively takes over all the network interfaces assigned to the namespace and binds them to the VM. So the `runc` container will lose its network connectivity. 
-
 ### Resource management
 
 Due to the way VMs differ in their CPU and memory allocation and sharing across the host system, the implementation of an equivalent method for these commands is potentially challenging.
@@ -125,6 +121,11 @@ See [\#380](https://github.com/clearcontainers/runtime/issues/380) for more deta
 This section lists items that may not be fixed due to fundamental architectural differences between 'soft containers' and those based on VMs.
 
 ### Networking
+
+#### Support for joining an existing VM `docker run --net=containers`)
+
+Docker supports the ability for containers to join another containers namespace. This allows multiple containers to share a common network namespace and the network interfaces placed in the network namespace. Clear Containers does not support network namespace sharing. If a Clear Container is setup to share the network namespace of a `runc` container, the runtime effectively takes over all the network interfaces assigned to the namespace and binds them to the VM. So the `runc` container will lose its network connectivity. 
+
 
 #### `docker --net=host`
 
