@@ -94,6 +94,8 @@ See [\#95](https://github.com/clearcontainers/runtime/issues/95) for more inform
 
 Note, this is *not* the same as the `docker ps` command. The runtime ps command lists the processes running within a container. The `docker ps` command lists the containers themselves. The runtime `ps` command is invoked from `docker top`
 
+Note that the OCI standard does not specify a `ps` command.
+
 #### events command
 
 The runtime does not currently implement the `events` command. We may not be able to perfectly match every sub-part of the `runc` events command, but we can probably do a subset, and maybe add some VM specific extensions.
