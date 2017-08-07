@@ -1,10 +1,10 @@
 # Clear Containers known differences and limitations
 
-As Intel® Clear Containers utilises Virtual Machines (VM) to enhance security and isolation of container workloads, the `cc-runtime` has a number of differences and limitations when compared with the standard Docker runtime - `runc`. Some of these limitations have potential solutions, whereas others exist due to fundamentally different architectural differences generally related to the use of Virtual Machines.
+As Intel® Clear Containers utilises Virtual Machines (VM) to enhance security and isolation of container workloads, the `cc-runtime` has a number of differences and limitations when compared with the standard Docker runtime, `runc`. Some of these limitations have potential solutions, whereas others exist due to fundamental architectural differences generally related to the use of VMs.
 
-The Clear Container runtime launches each container within its own hardware isolated virtual machine. And each virtual machine has its own kernel. Due to this higher degree of isolation, there are certain container capabilities that cannot be supported.
+The Clear Container runtime launches each container within its own hardware isolated VM, and each VM has its own kernel. Due to this higher degree of isolation, there are certain container capabilities that cannot be supported or are implicitly enabled via the VM.
 
-The below sections describe in brief the known limitations, and where applicable further link off to the relevant open Issues or pages with more detailed information.
+The below sections describe in brief the known limitations, and where applicable further links off to the relevant open Issues or pages with more detailed information.
 
 ## Pending items
 
@@ -14,14 +14,13 @@ This section lists items that may technically be fixable:
 
 #### Adding networks dynamically
 
-The runtime doesn't support adding networks to an already running container (`docker network connect`).
+The runtime does not currently support adding networks to an already running container (`docker network connect`).
 
 The VM network configuration is set up with what is defined by the CNM plugin at startup time. It would be possible to watch the networking namespace on the host to discover and propagate new networks at runtime but, it is not implemented today (tracked in issue [\#388](https://github.com/01org/cc-oci-runtime/issues/388)).
 
 #### Support for joining an existing VM `docker run --net=containers`)
 
-Docker supports the ability for containers to join another containers namespace. This allows multiple containers to share a common network namespace and the network interfaces placed in the network namespace. Clear Containers does not support network namespace sharing. If a Clear Container is setup to share the network namespace of a runc container, the runtime effectively takes over all the network interfaces assigned to the namespace and binds them to the virtual machine. So the runc container will lose its network connectivity. 
-
+Docker supports the ability for containers to join another containers namespace. This allows multiple containers to share a common network namespace and the network interfaces placed in the network namespace. Clear Containers does not support network namespace sharing. If a Clear Container is setup to share the network namespace of a `runc` container, the runtime effectively takes over all the network interfaces assigned to the namespace and binds them to the VM. So the `runc` container will lose its network connectivity. 
 
 ### Resource management
 
@@ -32,12 +31,12 @@ The `docker run -m MEMORY` option is not currently supported. It should be feasi
 [\#381](https://github.com/clearcontainers/runtime/issues/381)
 
 #### `docker run --cpus=`
-The `docker run --cpus=` option is not currently implemented. It should be possible to pass this information through to the QEMU command line CPU configuration options.
+The `docker run --cpus=` option is not currently implemented. It should be possible to pass this information through to the QEMU command line CPU configuration options to gain a similar effect.
 [\#341](https://github.com/clearcontainers/runtime/issues/341)
 
 #### shm
 
-The runtime does not implement the `docker run --shm-size` command to set the size of the /dev/shm tmpfs size within the container. It should be possible to pass this configuration value into the VM container and have the appropriate mount command happen at launch time.
+The runtime does not implement the `docker run --shm-size` command to set the size of the `/dev/shm tmpfs` size within the container. It should be possible to pass this configuration value into the VM container and have the appropriate mount command happen at launch time.
 
 #### cgroup constraints
 
@@ -68,14 +67,14 @@ The `docker run --tmpfs` command is not supported by the runtime. Given the natu
 
 #### checkpoint and restore
 
-There have been discussions around using VM save and restore to implement to give criu like functionality, and it is feasible that some workable solution may be achievable.
+There have been discussions around using VM save and restore to give criu like functionality, and it is feasible that some workable solution may be achievable.
 
 There is some more background and information in the `cc-oci-runtime` Issue [\#22](https://github.com/01org/cc-oci-runtime/issues/22)
 
 #### `docker stats`
 
-The `docker stats` command does not return meaningful information for Clear Container containers at present.
-Some thought needs to go into if we display information pure from within the VM, or if the information relates to the resource usage of the whole VM container as based from the host. The latter is likely more useful from a whole system point of view.
+The `docker stats` command does not return meaningful information for Clear Containers at present.
+Some thought needs to go into if we display information purely from within the VM, or if the information relates to the resource usage of the whole VM container as viewed from the host. The latter is likely more useful from a whole system point of view.
 
 [\#200](https://github.com/clearcontainers/runtime/issues/200) is related.
 
@@ -87,7 +86,7 @@ The Clear Containers runtime does not currently support the `ps` command.
 
 See [\#95](https://github.com/clearcontainers/runtime/issues/95) for more information.
 
-Note, this is *not* the same as the `docker ps` command. The runtime ps command lists the processes running within a container. The `docker ps` command lists the containers themselves. The runtime ps command is invoked from `docker top`
+Note, this is *not* the same as the `docker ps` command. The runtime ps command lists the processes running within a container. The `docker ps` command lists the containers themselves. The runtime `ps` command is invoked from `docker top`
 
 #### events command
 
@@ -99,7 +98,7 @@ See [\#379](https://github.com/clearcontainers/runtime/issues/379) for more info
 
 #### update command
 
-The runtime does not currently implement the `update` command, and hence does not support some of the `docker update` functionality. Much of the `update` functionality looks to be based around cgroup configuration.
+The runtime does not currently implement the `update` command, and hence does not support some of the `docker update` functionality. Much of the `update` functionality is based around cgroup configuration.
 
 It may be possible to implement some of the update functionality by adjusting cgroups either around the VM or inside the container VM itself, or possibly by some other VM functional equivalent. It needs more investigation.
 
@@ -107,7 +106,7 @@ See [\#380](https://github.com/clearcontainers/runtime/issues/380) for more deta
 
 ## Architectural limitations
 
-This section lists items that may not be fixed due to fundamental architectural differences between 'soft containers' and those based on Virtual Machines.
+This section lists items that may not be fixed due to fundamental architectural differences between 'soft containers' and those based on VMs.
 
 ### Networking
 
@@ -123,7 +122,7 @@ It should be noted, currently passing the `--net=host` option into a Clear Conta
 
 The runtime does not support the `docker run --link` command. This command is now effectively deprecated by docker, so we have no intentions of adding support. Equivalent functionality can be achieved with the newer docker networking commands.
 
-See more documents at [docs.docker.com](https://docs.docker.com/engine/userguide/networking/default_network/dockerlinks/)
+See more documentation at [docs.docker.com](https://docs.docker.com/engine/userguide/networking/default_network/dockerlinks/)
 
 ### Host resource sharing
 
