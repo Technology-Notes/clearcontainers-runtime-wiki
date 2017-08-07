@@ -19,6 +19,10 @@ Also you will find information on how to install `cc-runtime` and its dependenci
 - Test repository: https://github.com/clearcontainers/tests
 - Packaging files: https://github.com/clearcontainers/packaging
 
+## Clear Containers with Kubernetes
+
+- Early preview of Clear Containers running with Kubernetes: https://github.com/clearcontainers/runtime/wiki/Clear-Containers-and-Kubernetes
+
 ## External Links
 
 - Clear Containers project page:
