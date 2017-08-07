@@ -68,9 +68,11 @@ The `docker run --tmpfs` command is not supported by the runtime. Given the natu
 
 #### checkpoint and restore
 
-There have been discussions around using VM save and restore to give criu like functionality, and it is feasible that some workable solution may be achievable.
+The runtime does not provide `checkpoint` and `restore` commands. There have been discussions around using VM save and restore to give `criu` like functionality, and it is feasible that some workable solution may be achievable.
 
-There is some more background and information in the `cc-oci-runtime` Issue [\#22](https://github.com/01org/cc-oci-runtime/issues/22)
+There is some more background and information in the `cc-oci-runtime` Issue [\#22](https://github.com/01org/cc-oci-runtime/issues/22).
+
+Note that `checkpoint` and `restore` commands are not required by the OCI standard.
 
 #### `docker stats`
 
