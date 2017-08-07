@@ -82,7 +82,7 @@ Some thought needs to go into if we display information purely from within the V
 
 [\#200](https://github.com/clearcontainers/runtime/issues/200) is related.
 
-Note that the OCI standard does not specify an `events` command.
+Note that the OCI standard does not specify an `stats` command.
 
 ### runtime commands
 
@@ -103,6 +103,8 @@ The runtime does not currently implement the `events` command. We may not be abl
 See here for the [runc implementation](https://github.com/opencontainers/runc/blob/e775f0fba3ea329b8b766451c892c41a3d49594d/events.go)
 
 See [\#379](https://github.com/clearcontainers/runtime/issues/379) for more information.
+
+Note that the OCI standard does not specify an `events` command.
 
 #### update command
 
