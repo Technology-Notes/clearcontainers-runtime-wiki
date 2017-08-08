@@ -95,6 +95,13 @@ sudo make install
 sudo make install.config
 ```
 
+Copy `policy.json` to `/etc/containers/` 
+```
+$ sudo mkdir -p /etc/containers
+$ sudo cp test/policy.json /etc/containers
+```
+
+
 # Install latest RUNC:
 
 ```
