@@ -378,8 +378,14 @@ sudo rm -rf /var/log/crio/*
 sudo rm -rf /var/lib/kubelet/*
 sudo rm -rf /run/flannel/*
 sudo rm -rf /etc/cni/net.d/*
+
+sudo umount /tmp/hyper/shared/pods/*/*/rootfs /tmp/tmp*/crio/overlay2/*/merged /tmp/hyper/shared/pods/*/*/rootfs /run/netns/cni-* /tmp/tmp*/crio-run/overlay2-containers/*/userdata/shm /tmp/tmp*/crio/overlay2 /tmp/hyper/shared/pods/*/*-resolv.conf
+sudo umount /var/lib/containers/storage/overlay2
 sudo rm -rf /var/lib/virtcontainers/pods/*
 sudo rm -rf /var/run/virtcontainers/pods/*
+sudo rm -rf /var/lib/containers/storage/*
+sudo rm -rf /var/run/containers/storage/*
+
 sudo ifconfig cni0 down
 sudo ifconfig cbr0 down
 sudo ifconfig flannel.1 down
