@@ -17,6 +17,7 @@ Change release process, instead create a release candidate we can test the HEAD 
   - [ ] Version of Clear Container image used by the release.
   - [ ] Add links to Installation instructions.
   - [ ] Document any common vulnerabilities and exposures (CVEs) fixed with links to the CVE database.
+- [ ] Check if the [limitations doc](https://github.com/clearcontainers/runtime/blob/master/docs/limitations.md) needs updating.
 - [ ] Post release details on the public mailing list.
 - [ ] Update public IRC channel with a link to the latest release.
 
