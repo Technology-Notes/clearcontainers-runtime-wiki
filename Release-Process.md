@@ -12,6 +12,4 @@ Versions are in the form `MAJOR.MINOR.PATCH`, examples are: `3.0.0`, `3.0.0-rc.5
 `MAJOR` releases will likely require a change of the container manager version used, for example Docker\*. Please refer to the release notes for further details on this regard.
 
 ## Release checklist
-To always have a stable and fully functional version of Intel® Clear Containers working on all supported distributions, a new issue to handle tracking the new release will be filed. The issue description must contain the [Release checklist][checklist] and it must be fixed and closed before releasing a new version.
-
-[checklist]: https://github.com/01org/cc-oci-runtime/wiki/Release-Checklist
+To always have a stable and fully functional version of Intel® Clear Containers working on all supported distributions, a new issue to handle tracking the new release will be filed. The issue description must contain the [Release checklist](https://github.com/clearcontainers/runtime/wiki/Release-Checklist) and it must be fixed and closed before releasing a new version.
