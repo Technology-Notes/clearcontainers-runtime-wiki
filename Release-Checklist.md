@@ -10,7 +10,7 @@ Change release process, instead create a release candidate we can test the HEAD 
 		- [ ] Package signature test.
 	- [ ] Automated tests
 		- [ ] Integration tests included in the [tests repository][tests] under the integration directory.
-- [ ] Tag release using new version.
+- [ ] Create an **annotated tag** for the new release version (required by `git describe`)
 - [ ] Write release notes:
   - [ ] Brief summary of known issues, pointing to the appropriate Issues/PRs.
   - [ ] Version of Docker (ideally range of versions, or "up to version X") supported by the release.
