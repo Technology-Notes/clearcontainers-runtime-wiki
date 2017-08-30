@@ -1,7 +1,8 @@
 Change release process, instead create a release candidate we can test the HEAD what will be the last commit using new automated obs package generation we can generate and test commits based on HEAD.
 
 - [ ] Test the HEAD commit of the master branch using the tests included in the [tests repository][tests].
-- [ ] Update ```VERSION```.
+- [ ] Update ```VERSION``` in the runtime repository.
+- [ ] Update the versions of `cc-proxy` and `cc-shim`.
 - [ ] Generate OBS packages based on HEAD.
 - [ ] Test OBS packages
 	- [ ] Manual tests
