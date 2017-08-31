@@ -7,7 +7,11 @@ Change release process, instead create a release candidate we can test the HEAD 
 - [ ] Generate OBS packages based on HEAD.
 - [ ] Test OBS packages
 	- [ ] Manual tests
-		- [ ] Installation tests (must be done for CentOS/Fedora/RHEL/Ubuntu for major releases).
+		- [ ] Installation tests (must be done for major releases)
+			- [ ] CentOS
+			- [ ] Fedora
+			- [ ] RHEL
+			- [ ] Ubuntu
 		- [ ] Package signature test.
 	- [ ] Automated tests
 		- [ ] Integration tests included in the [tests repository][tests] under the integration directory.
