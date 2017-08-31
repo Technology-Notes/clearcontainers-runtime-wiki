@@ -2,7 +2,8 @@ Change release process, instead create a release candidate we can test the HEAD 
 
 - [ ] Test the HEAD commit of the master branch using the tests included in the [tests repository][tests].
 - [ ] Update ```VERSION``` in the runtime repository.
-- [ ] Update the versions of `cc-proxy` and `cc-shim`.
+- [ ] Update the versions of `cc-proxy` and `cc-shim`.<br/>
+  (Note that the "phase" element of the project encoded in the version strings needs to match for all components. For example, when a `beta` is released, the version string for *all* components should show `beta`).
 - [ ] Generate OBS packages based on HEAD.
 - [ ] Test OBS packages
 	- [ ] Manual tests
