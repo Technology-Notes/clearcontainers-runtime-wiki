@@ -89,6 +89,7 @@ sudo apt-get install -y libostree-dev
 
 go get -d github.com/kubernetes-incubator/cri-o
 cd $GOPATH/src/github.com/kubernetes-incubator/cri-o
+git checkout 9dbd60a0dfb8a517590ab3981408fc54fe400262
 make install.tools
 make
 sudo make install
