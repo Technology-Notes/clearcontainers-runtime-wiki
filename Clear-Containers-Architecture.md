@@ -272,15 +272,15 @@ For more details about `cc-proxy`'s protocol, theory of operations or debugging 
 
 #### Shim
 
-Docker's `containerd-shim` is designed around the assumption that it can monitor and reap the actual
-container process. As `containerd-shim` runs on the host, it can not directly monitor a process running
+A `container process reaper` such as Docker's `containerd-shim` or crio's `conmon` is designed around the assumption that it can monitor and reap the actual
+container process. As `container process reaper` runs on the host, it can not directly monitor a process running
 within a virtual machine. At most it can see the QEMU process, but that is not enough.
-With Clear Containers, `cc-shim` acts as the container process that `containerd-shim` can monitor. Therefore
+With Clear Containers, `cc-shim` acts as the container process that `container process reaper` can monitor. Therefore
 `cc-shim` needs to handle all container I/O streams (`stdout`, `stdin` and `stderr`) and forward all signals
-`containerd-shim` decides to send to the container process.
+`container process reaper` decides to send to the container process.
 
 `cc-shim` has an implicit knowledge about which VM agent will handle those streams and signals and thus act as
-an encapsulation layer between `containerd-shim` and the `agent`:
+an encapsulation layer between `container process reaper` and the `agent`:
 
 - It fragments and encapsulates the standard input stream from containerd-shim into `agent` stream packets:
 ```
