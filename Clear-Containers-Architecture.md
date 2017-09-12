@@ -111,7 +111,7 @@ were regressions introduced, as described in
 features like hotplug are available in `Q35`, the project will look to transition to this
 machine type.
  
-#### Agent
+## Agent
 
 ['agent'](https://github.com/clearcontainers/agent) is a daemon running in the
 guest as a supervisor for managing containers and processes potentially running
@@ -124,7 +124,7 @@ containers, `cc-runtime` always runs a single container per pod. **fixme** incor
 todo: add details on the agent protocol
 todo: detail how agent is based on [runc library libcontainers](https://github.com/opencontainers/runc).
 
-#### Runtime
+## Runtime
 
 `cc-runtime` is an OCI compatible container runtime and is responsible for handling
 all commands specified by
@@ -138,7 +138,7 @@ library.
 
 Here we will describe how `cc-runtime` handles the most important OCI commands.
 
-##### [`create`](https://github.com/clearcontainers/runtime/blob/master/create.go)
+### [`create`](https://github.com/clearcontainers/runtime/blob/master/create.go)
 
 When handling the OCI `create` command, `cc-runtime` goes through the following steps:
 
@@ -168,7 +168,7 @@ At this point, the container sandbox is created in the virtual machine. The
 container process itself is not yet running as one needs to call `docker start`
 to actually start it.
 
-##### [`start`](https://github.com/clearcontainers/runtime/blob/master/start.go)
+### [`start`](https://github.com/clearcontainers/runtime/blob/master/start.go)
 
 With namespace containers `start` launches a traditional Linux container process
 in its own set of namespaces. With Clear Containers, the main task of `cc-runtime`
@@ -183,7 +183,7 @@ container in a given pod. The command is sent to `cc-proxy` who forwards it to
 the right agent instance running in the appropriate guest.
 a signal and I/O streams proxy between `containerd-shim` and `cc-proxy`.
 
-##### [`exec`](https://github.com/clearcontainers/runtime/blob/master/exec.go)
+### [`exec`](https://github.com/clearcontainers/runtime/blob/master/exec.go)
 
 `docker exec` allows one to run an additional command within an already running
 container. With Clear Containers, this translates into sending a `EXECCMD` command
@@ -210,7 +210,7 @@ either containerd or conmon
 Now the `exec`'ed process is running in the virtual machine, sharing the UTS,
 PID, mount and IPC namespaces with the container's init process.
 
-##### [`kill`](https://github.com/clearcontainers/runtime/blob/master/kill.go)
+### [`kill`](https://github.com/clearcontainers/runtime/blob/master/kill.go)
 
 When sending the OCI `kill` command, container runtimes should send a [UNIX signal](https://en.wikipedia.org/wiki/Unix_signal)
 to the container process.
@@ -229,7 +229,7 @@ it know on which pod the container it is trying to `kill` is running.
 running on the guest. The command is sent to `cc-proxy` who forwards it to the
 right agent instance running in the appropriate guest.
 
-##### [`delete`](https://github.com/clearcontainers/runtime/blob/master/delete.go)
+### [`delete`](https://github.com/clearcontainers/runtime/blob/master/delete.go)
 
 `docker delete` is about deleting all resources held by a stopped/killed container.
 Running containers can not be `delete`d unless the OCI runtime is explictly being
@@ -252,7 +252,7 @@ virtual machine down.
 that a given virtual machine is shut down. `cc-proxy` will then clean all its
 internal resources associated with this VM.
 
-#### Proxy
+## Proxy
 
 `cc-proxy` is a daemon offering access to the VM [`agent`](https://github.com/clearcontainers/agent)
 to multiple `cc-shim` and `cc-runtime` clients.
@@ -279,10 +279,10 @@ The protocol on the `cc-proxy` UNIX named socket supports the following commands
 For more details about `cc-proxy`'s protocol, theory of operations or debugging tips, please read
 [`cc-proxy` README](https://github.com/clearcontainers/proxy) or the [proxy api `godoc`](https://godoc.org/github.com/clearcontainers/proxy/api).
 
-##### Proxy protocol diagram sequence
+### Proxy protocol diagram sequence
 ![Proxy protocol ](https://raw.githubusercontent.com/clearcontainers/proxy/master/docs/proxy-protocol-sequence-diagram.svg?sanitize=true)
 
-#### Shim
+## Shim
 
 A `container process reaper` such as Docker's `containerd-shim` or crio's `conmon` is designed around the assumption that it can monitor and reap the actual
 container process. As `container process reaper` runs on the host, it can not directly monitor a process running
@@ -325,7 +325,7 @@ sequence numbers. With `cc-shim` and Clear Containers, this example would look l
 
 ![cc-shim](arch-images/shim.png)
 
-#### Networking
+## Networking
 
 Containers will typically live in their own, possibly shared, networking namespace.
 At some point in a container lifecycle, container engines will set up that namespace
@@ -350,7 +350,7 @@ Clear Containers supports both
 [CNM](https://github.com/docker/libnetwork/blob/master/docs/design.md#the-container-network-model)
 and [CNI](https://github.com/containernetworking/cni) for networking management.
 
-##### CNM
+### CNM
 
 ![High-level CNM Diagram](arch-images/CNM_overall_diagram.png)
 
@@ -396,7 +396,7 @@ created by prestart hook
 5. Create bridge, TAP, and link all together with network interface previously
 created
 
-##### CNI
+### CNI
 
 ![CNI Diagram](arch-images/CNI_diagram.png)
 
@@ -416,7 +416,7 @@ created
 
 5. Start VM inside the netns and start the container
 
-#### Storage
+## Storage
 Container workloads are shared with the virtualized environment through 9pfs.
 The devicemapper storage driver is a special case. The driver uses dedicated
 block devices rather than formatted filesystems, and operates at the block level
@@ -447,9 +447,9 @@ Users can check to see if the container uses devicemapper block device as its
 rootfs by calling `mount(8)` within the counter.  If devicemapper block device
 is used, '/' will be mounted on `/dev/vda`.
 
-## Appendices
+# Appendices
 
-### DAX
+## DAX
 
 Clear Containers utilises the Linux kernel DAX (Direct Access filesystem)
 feature to efficiently map some host side files into the guest VM space.
@@ -485,30 +485,30 @@ More information about DAX can be found in the Linux Kernel
 Information on the use of nvdimm via QEMU is available in the QEMU source code
 [here](http://git.qemu-project.org/?p=qemu.git;a=blob;f=docs/nvdimm.txt;hb=HEAD)
 
-### Architectural changes by release
+## Architectural changes by release
 
 This section provides a brief overview of architectural features enabled in
 prior and current versions of Clear Containers.
 
-#### Version 3.0
+### Version 3.0
 - Moved to using cc-agent as an agent inside the VM
 - Moved to PC machine type
 - Rewrite of runtime in go, leveraging virtcontainers
 
-#### Version 2.1
+### Version 2.1
 - Moved to using `hyperstart` as an agent inside the VM
 - Creation of `cc-shim` and ``cc-proxy`.  Major features this enables:
   - Collection of workload exit codes (`cc-shim`)
   - Full support for terminal/signal control (`cc-proxy`)
 
-#### Version 2.0
+### Version 2.0
 
 - Clear Containers V2.0 is OCI compatible, and does integrate seamlessly into
 Docker 1.12 via the OCI runtime method.
 - Move from lkvm/kvmtool to QEMU for more extended functionality.
 - Using nvdimm to DAX map host files into the guest.
 
-#### Version 1.0
+### Version 1.0
 
 - Initial instantiation of Clear Containers
 - Using `lkvm/kvmtool` as VM supervisor on the host.
