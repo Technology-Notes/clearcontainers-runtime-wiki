@@ -157,7 +157,7 @@ a token which is unique to this registration.
 x. Run all the [OCI hooks](https://github.com/opencontainers/runtime-spec/blob/master/config.md#hooks) in the container namespaces,
 as described by the OCI container configuration file.
 
-x. [Set up the container networking](https://github.com/clearcontainers/runtime/wiki/Clear-Containers-Architecture#networking)
+x. [Set up the container networking](#networking)
 This must happen after all hooks are done as one of them is potentially setting
 the container networking namespace up.
 
