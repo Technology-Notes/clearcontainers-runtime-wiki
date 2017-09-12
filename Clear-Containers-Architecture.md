@@ -249,26 +249,18 @@ Its main role is to:
 for more details about that interface.
 
 The protocol on the `cc-proxy` UNIX named socket supports the following commands:
-
-- `Hello`: This command is for `cc-runtime` to let `cc-proxy` know about a newly created VM that will
-hold containers. This command payload contains the `agent` control and I/O UNIX socket paths created
-and exported by QEMU, and `cc-proxy` will connect to both of them after receiving the `Hello` command.
-- `Bye`: This is the opposite of `Hello`, i.e. `cc-runtime` uses this command to let `cc-proxy` know
-that it can release all resources related to the VM described in the command payload.
-- `Attach`: `cc-runtime` uses that command as a VM multiplexer as it allows it to notify `cc-proxy` about
-which VM it wants to talk to. In other words, this commands allows `cc-runtime` to attach itself to a
-running VM.
-- `AllocateIO`: As the `agent` can potentially handle I/O streams from multiple container processes at the
-same time, it needs to be able to associate any given stream to a container process. This is done by the `agent`
-allocating a set of at most 2 so-called sequence numbers per container process. `cc-runtime` will send
-the `AllocateIO` command to `cc-proxy` to have it request the `agent` to allocate those sequence numbers.
-They will be passed as command line arguments to `cc-shim`, who will then use them to e.g. prepend its stdin
-stream packets with the right sequence number.
-- `Hyper`: This command is used by both `cc-runtime` and `cc-shim` to forward `agent` specific
-commands.
+- `RegisterVM`: Used first after connecting to the proxy socket. It is used to let the proxy know about a new container on the system along with the paths go agent's command and I/O channels (AF_UNIX sockets).
+- `AttachVM`: It can be used to associate clients to an already known VM.
+- `UnregisterVM`: payload does the opposite of what `RegisterVM` does, indicating to the proxy it should release resources created by `RegisterVM`
+- `Hyper` : This payload will forward an hyperstart command to agent.
+- `ConnectShim`: Used to identify a shim against the proxy.
+- `DisconnectShim`: This pay load will unregister a shim from the proxy.
 
 For more details about `cc-proxy`'s protocol, theory of operations or debugging tips, please read
-[`cc-proxy` README](https://github.com/clearcontainers/proxy).
+[`cc-proxy` README](https://github.com/clearcontainers/proxy) or the [proxy api `godoc`](https://godoc.org/github.com/clearcontainers/proxy/api).
+
+##### Proxy protocol diagram sequence
+![Proxy protocol ](https://raw.githubusercontent.com/clearcontainers/proxy/master/docs/proxy-protocol-sequence-diagram.svg?sanitize=true)
 
 #### Shim
 
