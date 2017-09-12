@@ -1,10 +1,12 @@
 # Clear Containers Architecture
 
 ## TODO:
+```
 -discussion around configuration.toml?
 -do we need/want a more thorough description of virtcontainers?
 -replace the create process png with a UML flow instead (and remove from proxy section)?
 -cleanup of agent section
+```
 
 * [Overview](#overview)
     * [Hypervisor](#hypervisor)
