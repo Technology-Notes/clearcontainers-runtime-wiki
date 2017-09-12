@@ -440,12 +440,8 @@ docker cp [OPTIONS] CONTAINER:SRC_PATH HOST:DEST_PATH
 docker cp [OPTIONS] HOST:SRC_PATH CONTAINER:DEST_PATH
 ```
 
-FIXME:
-The devicemapper block device can only be used when creating a pod. If a container
-with a devicemapper rootfs is added to a pod, after the VM has started, the
-devicemapper block device will not be used. The container will fallback to using
-the overlay file system instead. This should be fixed once capability to hot-plug
-virtio block devices is added.
+Clear Containers has the ability to hotplug block devices, which makes it
+possible to use block devices for containers started after the VM has been launched.
 
 Users can check to see if the container uses devicemapper block device as its
 rootfs by calling `mount(8)` within the counter.  If devicemapper block device
