@@ -124,7 +124,7 @@ and launching `cc-shim` instances.
 
 Here we will describe how `cc-runtime` handles the most important OCI commands.
 
-##### `create`
+##### [`create`](https://github.com/clearcontainers/runtime/blob/master/create.go)
 
 When handling the OCI `create` command, `cc-runtime` goes through the following steps:
 
@@ -152,7 +152,7 @@ the container networking namespace up.
 At that point, the container sandbox is created in the virtual machine and `cc-shim` is stopped on the host.
 However the container process itself is not yet running as one needs to call `docker start` to actually start it.
 
-##### `start`
+##### [`start`](https://github.com/clearcontainers/runtime/blob/master/start.go)
 
 On namespace containers `start` launches a traditional Linux container process in its own set of namespaces.
 With Clear Containers, the main task of `cc-runtime` is to create and start a container within the
@@ -167,7 +167,7 @@ in the appropriate guest.
 3. `cc-runtime` resumes `cc-shim` so that it can now connect to the `cc-proxy` and acts as
 a signal and I/O streams proxy between `containerd-shim` and `cc-proxy`.
 
-##### `exec`
+##### [`exec`](https://github.com/clearcontainers/runtime/blob/master/exec.go)
 
 `docker exec` allows one to run an additional command within an already running container.
 With Clear Containers, this translates into sending a `EXECCMD` command to the agent so
@@ -191,7 +191,7 @@ command exit code to Docker.
 Now the `exec`'ed process is running in the virtual machine, sharing the UTS, PID, mount and IPC
 namespaces with the container's init process.
 
-##### `kill`
+##### [`kill`](https://github.com/clearcontainers/runtime/blob/master/kill.go)
 
 When sending the OCI `kill` command, container runtimes should send a [UNIX signal](https://en.wikipedia.org/wiki/Unix_signal)
 to the container process.
@@ -210,7 +210,7 @@ on which pod the container it is trying to `kill` is running.
 on the guest. The command is sent to `cc-proxy` who forwards it to the right agent instance
 running in the appropriate guest.
 
-##### `delete`
+##### [`delete`](https://github.com/clearcontainers/runtime/blob/master/delete.go)
 
 `docker delete` is about deleting all resources held by a stopped/killed container. Running
 containers can not be `delete`d unless the OCI runtime is explictly being asked to. In that
