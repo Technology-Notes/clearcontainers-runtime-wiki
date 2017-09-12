@@ -35,9 +35,9 @@ The [Clear Containers runtime (cc-runtime)](https://github.com/clearcontainers/r
 is compatible with the [OCI](https://github.com/opencontainers) specifications
 and thus works seamlessly with the
 [Docker Engine](https://www.docker.com/products/docker-engine) pluggable runtime
-architecture. In other words, one can transparently replace the
-[default Docker runtime (runc)](https://github.com/opencontainers/runc) with 
-cc-runtime`.
+architecture or the [Kubernetes Container Runtime Interface (CRI)](https://github.com/kubernetes/kubernetes/tree/master/pkg/kubelet/apis/cri/v1alpha1/runtime) through the [CRI-O](https://github.com/kubernetes-incubator/cri-o) implementation. In other words, one can transparently select between the
+[default Docker and CRI-O runtime (runc)](https://github.com/opencontainers/runc) and
+`cc-runtime`.
 
 ![Runtime and virtcontainers](arch-images/runtime-vc-relationship.png)
 ![Docker and Clear Containers](arch-images/docker-cc.png)
