@@ -81,7 +81,7 @@ container processes.
 
 ![Overall architecture](arch-images/overall-architecture.png)
 
-#### Hypervisor
+## Hypervisor
 
 Clear Containers use  [QEMU](http://www.qemu-project.org/)/[KVM](http://www.linux-kvm.org/page/Main_Page)
 to create virtual machines where containers will run:
