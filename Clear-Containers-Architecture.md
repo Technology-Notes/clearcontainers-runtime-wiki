@@ -21,11 +21,10 @@
     * [Proxy](#proxy)
     * [Shim](#shim)
     * [Networking](#networking)
+    * [Storage](#storage)
 * [Appendices](#appendices)
     * [DAX](#dax)
     * [Previous Releases](#previous-releases)
-        * [V2.0](#version-20)
-        * [V1.0](#version-10)
 
 ## Overview
 
