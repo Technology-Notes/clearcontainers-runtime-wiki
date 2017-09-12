@@ -122,115 +122,126 @@ all commands specified by
 [the OCI runtime specification](https://github.com/opencontainers/runtime-spec)
 and launching `cc-shim` instances.
 
+`cc-runtime` heavily utilizes the
+[virtcontainers project](https://github.com/containers/virtcontainers), which
+provides a generic runtime-specification agnostic hardware-virtualized containers
+library.
+
 Here we will describe how `cc-runtime` handles the most important OCI commands.
 
 ##### [`create`](https://github.com/clearcontainers/runtime/blob/master/create.go)
 
 When handling the OCI `create` command, `cc-runtime` goes through the following steps:
 
-1. Create the container namespaces (Only the network and mount namespaces are
-currently supported), according to the container OCI configuration file.
-2. Spawn the `cc-shim` process and have it wait on a couple of temporary pipes for:
-   * A `cc-proxy` created file descriptor (one end of a socketpair) for the shim to connect to.
-   * The container `agent` sequence numbers for at most two I/O streams (One for `stdout` and `stdin`, one for `stderr`).
-   The `agent` uses those sequence numbers to multiplex all streams for all processes through one serial interface (The
-   virtio I/O serial one).
-3. Run all the [OCI hooks](https://github.com/opencontainers/runtime-spec/blob/master/config.md#hooks) in the container namespaces,
+1. Create the container namespaces according to the container OCI configuration
+file (only the network and mount namespaces are currently supported).
+2. Create the virtual machine running the container process. The VM `systemd` instance will spawn the `agent` daemon.
+3. Register the virtual machine with `cc-proxy`.
+4. The `cc-proxy` waits for the agent to signal that it is ready and then returns
+a token which is unique to this registration.
+5. Spawn the `cc-shim` process providing two arguments:
+  `cc-shim --token $(token) --uri $(uri)
+   * The proxy URL
+   * The token for the container process it needs to monitor
+
+--- WIP:
+x. Run all the [OCI hooks](https://github.com/opencontainers/runtime-spec/blob/master/config.md#hooks) in the container namespaces,
 as described by the OCI container configuration file.
-4. [Set up the container networking](https://github.com/clearcontainers/runtime/wiki/Clear-Containers-Architecture#networking)
+
+x. [Set up the container networking](https://github.com/clearcontainers/runtime/wiki/Clear-Containers-Architecture#networking)
 This must happen after all hooks are done as one of them is potentially setting
 the container networking namespace up.
-5. Create the virtual machine running the container process. The VM `systemd` instance will spawn the `agent` daemon.
-6. Wait for the `agent` to signal that it is ready.
-7. Send the pod creation command to the `agent`. The `agent` pod is the container process sandbox.
-8. Send the allocateIO command to the proxy, for getting the `agent` I/O sequence numbers described in step 2.
-9. Pass the `cc-proxy` socketpair file descriptor, and the I/O sequence numbers to the listening cc-shim process through the dedicated pipes.
-10. The `cc-shim` instance is put into a stopped state to prevent it from doing I/O before the container is started.
+
 
 ![Docker create](arch-images/create.png)
 
-At that point, the container sandbox is created in the virtual machine and `cc-shim` is stopped on the host.
-However the container process itself is not yet running as one needs to call `docker start` to actually start it.
+At this point, the container sandbox is created in the virtual machine. The
+container process itself is not yet running as one needs to call `docker start`
+to actually start it.
 
 ##### [`start`](https://github.com/clearcontainers/runtime/blob/master/start.go)
 
-With namespace containers `start` launches a traditional Linux container process in its own set of namespaces.
-With Clear Containers, the main task of `cc-runtime` is to create and start a container within the
-pod that was created during the `create` step. In practice, this means `cc-runtime` follows
-these steps:
+With namespace containers `start` launches a traditional Linux container process
+in its own set of namespaces. With Clear Containers, the main task of `cc-runtime`
+is to create and start a container within the pod that was created during the
+`create` step. In practice, this means `cc-runtime` follows these steps:
 
-1. `cc-runtime` connects to `cc-proxy` and sends it the `attach` command to let it know which pod
-we want to use to create and start the new container.
-2. `cc-runtime` sends an agent `NEWCONTAINER` command to create and start a new container in
-a given pod. The command is sent to `cc-proxy` who forwards it to the right agent instance running
-in the appropriate guest.
-3. `cc-runtime` resumes `cc-shim` so that it can now connect to the `cc-proxy` and acts as
+1. `cc-runtime` connects to `cc-proxy` and sends it the `attach` command to
+let it know which pod we want to use to create and start the new container.
+2. `cc-runtime` sends an agent `STARTPOD` command via `cc-proxy`.
+3. `cc-runtime` sends an agent `NEWCONTAINER` command to create and start a new
+container in a given pod. The command is sent to `cc-proxy` who forwards it to
+the right agent instance running in the appropriate guest.
 a signal and I/O streams proxy between `containerd-shim` and `cc-proxy`.
 
 ##### [`exec`](https://github.com/clearcontainers/runtime/blob/master/exec.go)
 
-`docker exec` allows one to run an additional command within an already running container.
-With Clear Containers, this translates into sending a `EXECCMD` command to the agent so
-that it runs a command into a running container belonging to a certain pod.
-All I/O streams from the executed command will be passed back to Docker through a newly
-created `cc-shim`.
+`docker exec` allows one to run an additional command within an already running
+container. With Clear Containers, this translates into sending a `EXECCMD` command
+to the agent so that it runs a command into a running container belonging to a
+certain pod. All I/O streams from the executed command will be passed back to
+`containerd` or `conmon` through a newly created `cc-shim`.
 
-The `exec` code path is partly similar to the `create` one and `cc-runtime` goes through
-the following steps:
+The `exec` code path is partly similar to the `create` one and `cc-runtime`
+goes through the following steps:
 
-1. `cc-runtime` connects to `cc-proxy` and sends it the `attach` command to let it know which pod
-we want to use to run the `exec` command.
-2. `cc-runtime` sends the allocateIO command to the proxy, for getting the `agent` I/O sequence
-numbers for the `exec` command I/O streams.
-3. `cc-runtime` sends an agent `EXECMD` command to start the command in the right container
-The command is sent to `cc-proxy` who forwards it to the right agent instance running
-in the appropriate guest.
-4. Spawn the `cc-shim` process for it to forward the output streams (stderr and stdout) and the `exec`
-command exit code to Docker.
+1. `cc-runtime` connects to `cc-proxy` and sends it the `attach` command to let
+it know which pod we want to use to run the `exec` command.
+2. `cc-runtime` receives a token from `cc-proxy` based on this connection.
+3. `cc-runtime` sends an agent `EXECMD` command to start the command in the
+right container. The command is sent to `cc-proxy` who forwards it to the right
+agent instance running in the appropriate guest.
+4. Spawn the `cc-shim` process providing two arguments:
+  `cc-shim --token $(token) --uri $(uri)
+   * The proxy URL
+   * The token provided by the proxy.
+The `cc-shim` process will forward the output streams (stderr and stdout) to
+either containerd or conmon
 
-Now the `exec`'ed process is running in the virtual machine, sharing the UTS, PID, mount and IPC
-namespaces with the container's init process.
+Now the `exec`'ed process is running in the virtual machine, sharing the UTS,
+PID, mount and IPC namespaces with the container's init process.
 
 ##### [`kill`](https://github.com/clearcontainers/runtime/blob/master/kill.go)
 
 When sending the OCI `kill` command, container runtimes should send a [UNIX signal](https://en.wikipedia.org/wiki/Unix_signal)
 to the container process.
-In the Clear Containers context, this means `cc-runtime` needs a way to send a signal
-to the container process within the virtual machine. As `cc-shim` is responsible for
-forwarding signals to its associated running containers, `cc-runtime` naturally
+In the Clear Containers context, this means `cc-runtime` needs a way to send a
+signal to the container process within the virtual machine. As `cc-shim` is responsible
+for forwarding signals to its associated running containers, `cc-runtime` naturally
 calls `kill` on the `cc-shim` PID.
 
 However, `cc-shim` is not able to trap `SIGKILL` and `SIGSTOP` and thus `cc-runtime`
 needs to follow a different code path for those 2 signals.
 Instead of `kill`'ing the `cc-shim` PID, it will go through the following steps:
 
-1. `cc-runtime` connects to `cc-proxy` and sends it the `attach` command to let it know
-on which pod the container it is trying to `kill` is running.
-2. `cc-runtime` sends an agent `KILLCONTAINER` command to `kill` the container running
-on the guest. The command is sent to `cc-proxy` who forwards it to the right agent instance
-running in the appropriate guest.
+1. `cc-runtime` connects to `cc-proxy` and sends it the `attach` command to let
+it know on which pod the container it is trying to `kill` is running.
+2. `cc-runtime` sends an agent `KILLCONTAINER` command to `kill` the container
+running on the guest. The command is sent to `cc-proxy` who forwards it to the
+right agent instance running in the appropriate guest.
 
 ##### [`delete`](https://github.com/clearcontainers/runtime/blob/master/delete.go)
 
-`docker delete` is about deleting all resources held by a stopped/killed container. Running
-containers can not be `delete`d unless the OCI runtime is explictly being asked to. In that
-case it will first `kill` the container and only then `delete` it.
+`docker delete` is about deleting all resources held by a stopped/killed container.
+Running containers can not be `delete`d unless the OCI runtime is explictly being
+asked to. In that case it will first `kill` the container and only then `delete`
+it.
 
-The resources held by a Clear Container are quite different from the ones held by a host
-namespace container e.g. run by `runc`. `cc-runtime` needs mostly to delete the pod
-holding the stopped container on the virtual machine, shut the hypervisor down and finally
-delete all related proxy resources:
+The resources held by a Clear Container are quite different from the ones held
+by a host namespace container e.g. run by `runc`. `cc-runtime` needs mostly to
+delete the pod holding the stopped container on the virtual machine, shut the
+hypervisor down and finally delete all related proxy resources:
 
-1. `cc-runtime` connects to `cc-proxy` and sends it the `attach` command to let it know
-on which pod the container it is trying to to `delete` is running.
-2. `cc-runtime` sends an agent `DESTROYPOD` command to `destroy` the pod holding the
-container running on the guest. The command is sent to `cc-proxy` who forwards it to the right
-agent instance running in the appropriate guest.
-3. After deleting the last running pod, the `agent` will gracefully shut the virtual machine
-down.
-4. `cc-runtime` sends the `BYE` command to `cc-proxy`, to let it know that a given virtual
-machine is shut down. `cc-proxy` will then clean all its internal resources associated with this
-VM.
+1. `cc-runtime` connects to `cc-proxy` and sends it the `attach` command to let
+it know on which pod the container it is trying to to `delete` is running.
+2. `cc-runtime` sends an agent `DESTROYPOD` command to `destroy` the pod holding
+the container running on the guest. The command is sent to `cc-proxy` who forwards
+it to the right agent instance running in the appropriate guest.
+3. After deleting the last running pod, the `agent` will gracefully shut the
+virtual machine down.
+4. `cc-runtime` sends the `UnregisterVM` command to `cc-proxy`, to let it know
+that a given virtual machine is shut down. `cc-proxy` will then clean all its
+internal resources associated with this VM.
 
 #### Proxy
 
