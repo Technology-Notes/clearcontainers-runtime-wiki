@@ -119,7 +119,7 @@ within those containers.
 The `agent` execution unit is the pod. An `agent` pod is a container sandbox defined
 by a set of namespaces (UTS, PID, mount, IPC, user and network). `cc-runtime` can run several containers per pod to support orchestrators that require multiple containers running inside a single VM. In case of docker, `cc-runtime` runs a single container per pod.
 
-The `agent` uses a communication protocol defined by the [hyperstart](https://github.com/hyperhq/hyperstart) project. This was done to maintain backward compatibility with the `hyperstart` agent used in 2.1 version.
+The `agent` uses a communication protocol defined by the [hyperstart](https://github.com/hyperhq/hyperstart) project. This was done to maintain backward compatibility with the `hyperstart` agent used in 2.1 version of `Clear Containers`.
 
 The `agent` supports the following commands:
 - StartPodCmd: Sets up a pod in a newly created VM. 
@@ -130,7 +130,7 @@ The `agent` supports the following commands:
 - RemoveContainerCmd: Removes a container from the pod. This command will fail for a container in running state.
 - Destroypod: Removes all containers within a pod . All containers need to be in stopped state for this command to succeed. Frees resources associated with the pod.
 
-The `agent` code makes use of `libcontainer`[https://github.com/opencontainers/runc/tree/master/libcontainer] to manage the lifecycle of the container. This way the `agent` reuses most of the code used by `docker-runc`[runc library libcontainers](https://github.com/opencontainers/runc).
+The `agent` code makes use of `libcontainer`(https://github.com/opencontainers/runc/tree/master/libcontainer) to manage the lifecycle of the container. This way the `agent` reuses most of the code used by `docker-runc`[runc library libcontainers](https://github.com/opencontainers/runc).
 
 ## Runtime
 
