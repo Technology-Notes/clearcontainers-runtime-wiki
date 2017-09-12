@@ -23,89 +23,103 @@
 This is an architectural overview of Clear Containers, based on the 3.0 release.
 
 The [Clear Containers runtime (cc-runtime)](https://github.com/clearcontainers/runtime)
-is compatible with the [OCI](https://github.com/opencontainers) specifications and thus
-works seamlessly with the [Docker Engine](https://www.docker.com/products/docker-engine)
-pluggable runtime architecture. In other words, one can transparently replace the
-[default Docker runtime (runc)](https://github.com/opencontainers/runc) with `cc-runtime`.
+is compatible with the [OCI](https://github.com/opencontainers) specifications
+and thus works seamlessly with the
+[Docker Engine](https://www.docker.com/products/docker-engine) pluggable runtime
+architecture. In other words, one can transparently replace the
+[default Docker runtime (runc)](https://github.com/opencontainers/runc) with 
+cc-runtime`.
 
-![Runtime and virtcontainers](runtime-vc-relationship.png)
-![Docker and Clear Containers](docker-cc.png)
+![Runtime and virtcontainers](arch-images/runtime-vc-relationship.png)
+![Docker and Clear Containers](arch-images/docker-cc.png)
 
-`cc-runtime` creates a QEMU/KVM virtual machine for each container the Docker engine creates.
+`cc-runtime` creates a QEMU/KVM virtual machine for each container the Docker
+engine creates.
 
-The container process is then spawned by an [agent](https://github.com/clearcontainers/agent)
-running as a daemon inside the virtual machine.
-The agent opens two virtio serial interfaces (Control and I/O) in the guest, and QEMU exposes them
-as serial devices on the host. `cc-runtime` uses the control device for sending container
-management commands to the agent while the I/O serial device is used to pass I/O streams (`stdout`,
-`stderr`, `stdin`) between the guest and the Docker Engine.
+The container process is then spawned by an
+[agent](https://github.com/clearcontainers/agent) running as a daemon inside
+the virtual machine. The agent opens two virtio serial interfaces (Control and
+I/O) in the guest, and QEMU exposes them as serial devices on the host. `cc-runtime`
+uses the control device for sending container management commands to the agent
+while the I/O serial device is used to pass I/O streams (`stdout`, `stderr`,
+`stdin`) between the guest and the Docker Engine.
 
-For any given container, both the init process and all potentially executed commands within that
-container, together with their related I/O streams, need to go through two virtio serial interfaces
-exported by QEMU. The [Clear Containers proxy (`cc-proxy`)](https://github.com/clearcontainers/proxy)
-multiplexes and demultiplexes those commands and streams for all container virtual machines.
+For any given container, both the init process and all potentially executed
+commands within that container, together with their related I/O streams, need
+to go through two virtio serial interfaces exported by QEMU. The [Clear Containers
+proxy (`cc-proxy`)](https://github.com/clearcontainers/proxy) multiplexes and
+demultiplexes those commands and streams for all container virtual machines.
 There is only one `cc-proxy` instance running per Clear Containers host.
 
-On the host, each container process's removal is handled by a repear in the higher layers of the container
-stack. In the case of Docker it is handled by `containerd-shim`.  In the case of CRI-O it is handled by
-`conmon`.  For clarity, we will call this the `container process repear`. As Clear Containers processes
-run inside their own  virtual machines, the `container process repear` can not monitor, control or reap
-them. `cc-runtime` fixes that issue by creating an [additional shim process (`cc-shim`)](https://github.com/clearcontainers/shim) between `containerd-shim` and `cc-proxy`. A `cc-shim` instance
-will both forward signals and `stdin` streams to the container process on the guest and pass the container
-`stdout` and `stderr` streams back up the stack to CRI-O or Docker via the `container process repear`.
-`cc-runtime` creates a `cc-shim` daemon for each container and for each OCI command received to
-run within an already running container (i.e. `docker exec`).
+On the host, each container process's removal is handled by a repear in the higher
+layers of the container stack. In the case of Docker it is handled by `containerd-shim`.
+In the case of CRI-O it is handled by `conmon`.  For clarity, we will call this
+the `container process repear`. As Clear Containers processes run inside their
+own  virtual machines, the `container process repear` can not monitor, control
+or reap them. `cc-runtime` fixes that issue by creating an [additional shim process
+(`cc-shim`)](https://github.com/clearcontainers/shim) between `containerd-shim`
+and `cc-proxy`. A `cc-shim` instance will both forward signals and `stdin` streams
+to the container process on the guest and pass the container `stdout` and `stderr`
+streams back up the stack to CRI-O or Docker via the `container process repear`.
+`cc-runtime` creates a `cc-shim` daemon for each container and for each OCI command
+received to run within an already running container (i.e. `docker exec`).
 
-The container workload, i.e. the actual OCI bundle rootfs, is exported from the host to
-the virtual machine.  In the case where a block-based graph driver is configured, virtio-blk will be used.
-In all other cases a 9pfs virtio mount point will be used. `cc-agent` uses this mount point as the root
-filesystem for the container processes.
+The container workload, i.e. the actual OCI bundle rootfs, is exported from the
+host to the virtual machine.  In the case where a block-based graph driver is
+configured, virtio-blk will be used. In all other cases a 9pfs virtio mount point
+will be used. `cc-agent` uses this mount point as the root filesystem for the
+container processes.
 
-![Overall architecture](overall-architecture.png)
+![Overall architecture](arch-images/overall-architecture.png)
 
 #### Hypervisor
 
-Clear Containers use  [QEMU](http://www.qemu-project.org/)/[KVM](http://www.linux-kvm.org/page/Main_Page) to
-create virtual machines where containers will run:
+Clear Containers use  [QEMU](http://www.qemu-project.org/)/[KVM](http://www.linux-kvm.org/page/Main_Page)
+to create virtual machines where containers will run:
 
-![QEMU/KVM](qemu.png)
+![QEMU/KVM](arch-images/qemu.png)
 
-Although Clear Containers can run with any recent QEMU release, containers boot time and memory
-footprint are significantly optimized by using a specific QEMU version called 
-[`qemu-lite`](https://github.com/01org/qemu-lite/tree/qemu-2.7-lite).
+Although Clear Containers can run with any recent QEMU release, containers boot
+time and memory footprint are significantly optimized by using a specific QEMU
+version called [`qemu-lite`](https://github.com/01org/qemu-lite/tree/qemu-2.7-lite).
 
-Today, Clear Containers defaults to using the `pc` machine type. In the past a `pc-lite` machine type was
-utilized which provided the following improvements:
-- Removing many of the legacy hardware devices support so that the guest kernel does not waste
-time initializing devices of no use for containers.
-- Skipping the guest BIOS/firmware and jumping straight to the Clear Containers kernel.
+Today, Clear Containers defaults to using the `pc` machine type. In the past a
+`pc-lite` machine type was utilized which provided the following improvements:
+- Removing many of the legacy hardware devices support so that the guest kernel
+does not waste time initializing devices of no use for containers.
+- Skipping the guest BIOS/firmware and jumping straight to the Clear Containers
+kernel.
 
-In order to provide some advanced features like hotplug support we moved from `pc-lite` to `pc` machine type.
+In order to provide some advanced features like hotplug support we moved from
+`pc-lite` to `pc` machine type.
 
-In the future Clear Containers plan to move to a v2.9 version of qemu lite, available at our Clear
-Containers [QEMU repo](https://github.com/clearcontainers/qemu/tree/qemu-lite-v2.9.0). This transition
-has been delayed to post Clear Containers 3.0 release since there were regressions introduced, as
-described in [runtime issue 407](https://github.com/clearcontainers/runtime/issues/407).
+In the future Clear Containers plan to move to a v2.9 version of qemu lite,
+available at our Clear Containers [QEMU repo](https://github.com/clearcontainers/qemu/tree/qemu-lite-v2.9.0).
+This transition has been delayed to post Clear Containers 3.0 release since there
+were regressions introduced, as described in
+[runtime issue 407](https://github.com/clearcontainers/runtime/issues/407).
 
-Once full feature support for hotplug is available, the project will also look to transition to the `Q35`
-machine type.
+Once full feature support for hotplug is available, the project will also look
+to transition to the `Q35` machine type.
  
 #### Agent
 
-['agent'](https://github.com/clearcontainers/agent) is a daemon running in the guest as a
-supervisor for managing containers and processes potentially running within those containers.
+['agent'](https://github.com/clearcontainers/agent) is a daemon running in the
+guest as a supervisor for managing containers and processes potentially running
+within those containers.
 
 The `agent` execution unit is the pod. An `agent` pod is a container sandbox defined
-by a set of namespaces (UTS, PID, mount and IPC). Although a pod can hold several containers,
-`cc-runtime` always runs a single container per pod. **fixme** incorrect<--
+by a set of namespaces (UTS, PID, mount and IPC). Although a pod can hold several
+containers, `cc-runtime` always runs a single container per pod. **fixme** incorrect<--
 
 todo: add details on the agent protocol
 todo: detail how agent is based on [runc library libcontainers](https://github.com/opencontainers/runc).
 
 #### Runtime
 
-`cc-runtime` is an OCI compatible container runtime and is responsible for handling all
-commands specified by [the OCI runtime specification](https://github.com/opencontainers/runtime-spec)
+`cc-runtime` is an OCI compatible container runtime and is responsible for handling
+all commands specified by
+[the OCI runtime specification](https://github.com/opencontainers/runtime-spec)
 and launching `cc-shim` instances.
 
 Here we will describe how `cc-runtime` handles the most important OCI commands.
@@ -114,8 +128,8 @@ Here we will describe how `cc-runtime` handles the most important OCI commands.
 
 When handling the OCI `create` command, `cc-runtime` goes through the following steps:
 
-1. Create the container namespaces (Only the network and mount namespaces are currently supported),
-according to the container OCI configuration file.
+1. Create the container namespaces (Only the network and mount namespaces are
+currently supported), according to the container OCI configuration file.
 2. Spawn the `cc-shim` process and have it wait on a couple of temporary pipes for:
    * A `cc-proxy` created file descriptor (one end of a socketpair) for the shim to connect to.
    * The container `agent` sequence numbers for at most two I/O streams (One for `stdout` and `stdin`, one for `stderr`).
@@ -133,7 +147,7 @@ the container networking namespace up.
 9. Pass the `cc-proxy` socketpair file descriptor, and the I/O sequence numbers to the listening cc-shim process through the dedicated pipes.
 10. The `cc-shim` instance is put into a stopped state to prevent it from doing I/O before the container is started.
 
-![Docker create](create.png)
+![Docker create](arch-images/create.png)
 
 At that point, the container sandbox is created in the virtual machine and `cc-shim` is stopped on the host.
 However the container process itself is not yet running as one needs to call `docker start` to actually start it.
@@ -275,27 +289,28 @@ an encapsulation layer between `containerd-shim` and the `agent`:
   │         (8 bytes)         │    (4 bytes)  │                    │
   └───────────────────────────┴───────────────┴────────────────────┘
 ```
-- It de-encapsulates and assembles standard output and error `agent` stream packets into an output stream
-that it forwards to `containerd-shim`
-- It translates all UNIX signals (except `SIGKILL` and `SIGSTOP`) into `agent` `KILLCONTAINER` commands
-that it sends to the VM via `cc-proxy` UNIX named socket.
+- It de-encapsulates and assembles standard output and error `agent` stream packets
+into an output stream that it forwards to `containerd-shim`
+- It translates all UNIX signals (except `SIGKILL` and `SIGSTOP`) into `agent`
+`KILLCONTAINER` commands that it sends to the VM via `cc-proxy` UNIX named socket.
 
-The IO stream sequence numbers are passed from `cc-runtime` to `cc-shim` when the former spawns the latter.
-They are generated by the `agent` and `cc-runtime` fetches them by sending the `AllocateIO` command to
-`cc-proxy`.
+The IO stream sequence numbers are passed from `cc-runtime` to `cc-shim` when 
+the former spawns the latter. They are generated by the `agent` and `cc-runtime`
+fetches them by sending the `AllocateIO` command to `cc-proxy`.
 
-As an example, let's say that running the `pwd` command from a container standard input will generate
-`/tmp` from the container standard output. The `agent` assigned this specific process 8888 and 8889 respectively
-as the stdin, stdout and stderr sequence numbers.
-With `cc-shim` and Clear Containers, this example would look like:
+As an example, let's say that running the `pwd` command from a container standard
+input will generate `/tmp` from the container standard output. The `agent` assigned
+this specific process 8888 and 8889 respectively as the stdin, stdout and stderr
+sequence numbers. With `cc-shim` and Clear Containers, this example would look like:
 
-![cc-shim](shim.png)
+![cc-shim](arch-images/shim.png)
 
 #### Networking
 
 Containers will typically live in their own, possibly shared, networking namespace.
 At some point in a container lifecycle, container engines will set up that namespace
-to add the container to a network which is isolated from the host network, but which is shared between containers
+to add the container to a network which is isolated from the host network, but
+which is shared between containers
 
 In order to do so, container engines will usually add one end of a `virtual ethernet
 (veth)` pair into the container networking namespace. The other end of the `veth` pair
@@ -309,7 +324,7 @@ To overcome that incompatibility between typical container engines expectations
 and virtual machines, `cc-runtime` networking transparently bridges `veth`
 interfaces with `TAP` ones:
 
-![Clear Containers networking](network.png)
+![Clear Containers networking](arch-images/network.png)
 
 The [virtcontainers library](https://github.com/containers/virtcontainers#cnm) has some more
 details on how `cc-runtime` implements [CNM](https://github.com/docker/libnetwork/blob/master/docs/design.md).
@@ -344,7 +359,7 @@ backend to map in the host side file into the virtual nvdimm space.
 feature enabled, allowing direct page mapping and access, thus bypassing the
 guest page cache.
 
-![DAX](DAX.png)
+![DAX](arch-images/DAX.png)
 
 More information about DAX can be found in the Linux Kernel
 [documentation](https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/filesystems/dax.txt)
