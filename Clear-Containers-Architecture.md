@@ -6,6 +6,7 @@
 -do we need/want a more thorough description of virtcontainers?
 -replace the create process png with a UML flow instead (and remove from proxy section)?
 -cleanup of agent section
+-add crio/conmon/k8s details
 ```
 
 * [Overview](#overview)
