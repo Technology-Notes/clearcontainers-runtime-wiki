@@ -284,10 +284,21 @@ an encapsulation layer between `container process reaper` and the `agent`:
 
 - It fragments and encapsulates the standard input stream from containerd-shim into `cc-proxy` stream frames:
 ```
-  ┌───────────────────────────┬───────────────┬────────────────────┐
-  │ IO stream sequence number │ Packet length │ IO stream fragment │
-  │         (8 bytes)         │    (4 bytes)  │                    │
-  └───────────────────────────┴───────────────┴────────────────────┘
+                     1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 3 3
+0 1 2 3 4 5 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+┌───────────────────────────┬───────────────┬───────────────┐
+│          Version          │ Header Length │   Reserved    │
+├───────────────────────────┼─────┬─┬───────┼───────────────┤
+│          Reserved         │ Res.│E│  0x2  │    Opcode     │
+├───────────────────────────┴─────┴─┴───────┴───────────────┤
+│                      Payload Length                       │
+├───────────────────────────────────────────────────────────┤
+│                                                           │
+│                         Payload                           │
+│                                                           │
+│      (variable length, optional and opcode-specific)      │
+│                                                           │
+└───────────────────────────────────────────────────────────┘
 ```
 - It de-encapsulates and assembles standard output and error `cc-proxy` stream frames
 into an output stream that it forwards to `container process reaper`
