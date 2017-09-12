@@ -34,7 +34,7 @@ cc-runtime`.
 ![Docker and Clear Containers](arch-images/docker-cc.png)
 
 `cc-runtime` creates a QEMU/KVM virtual machine for each container the Docker
-engine creates.
+engine creates. <-- we probably don't need to make this docker specific here?
 
 The container process is then spawned by an
 [agent](https://github.com/clearcontainers/agent) running as a daemon inside
@@ -83,24 +83,24 @@ Although Clear Containers can run with any recent QEMU release, containers boot
 time and memory footprint are significantly optimized by using a specific QEMU
 version called [`qemu-lite`](https://github.com/01org/qemu-lite/tree/qemu-2.7-lite).
 
-Today, Clear Containers defaults to using the `pc` machine type. In the past a
-`pc-lite` machine type was utilized which provided the following improvements:
+Clear Containers supports various machine types, including `pc`, `pc-lite` and `q35`.
+Clear Containers defaults to using the `pc` machine type. In the past
+`pc-lite` was utilized which provided the following improvements:
 - Removing many of the legacy hardware devices support so that the guest kernel
 does not waste time initializing devices of no use for containers.
 - Skipping the guest BIOS/firmware and jumping straight to the Clear Containers
 kernel.
 
-In order to provide some advanced features like hotplug support we moved from
-`pc-lite` to `pc` machine type.
+In order to provide some advanced features which were lacking in `pc-lite` like hotplug
+support we moved from to `pc`.
 
-In the future Clear Containers plan to move to a v2.9 version of qemu lite,
+In the future Clear Containers plan to move to v2.9 version of qemu,
 available at our Clear Containers [QEMU repo](https://github.com/clearcontainers/qemu/tree/qemu-lite-v2.9.0).
 This transition has been delayed to post Clear Containers 3.0 release since there
 were regressions introduced, as described in
-[runtime issue 407](https://github.com/clearcontainers/runtime/issues/407).
-
-Once full feature support for hotplug is available, the project will also look
-to transition to the `Q35` machine type.
+[runtime issue 407](https://github.com/clearcontainers/runtime/issues/407).  Once support for
+features like hotplug are available in `Q35`, the project will look to transition to this
+machine type.
  
 #### Agent
 
