@@ -137,7 +137,7 @@ currently supported), according to the container OCI configuration file.
    virtio I/O serial one).
 3. Run all the [OCI hooks](https://github.com/opencontainers/runtime-spec/blob/master/config.md#hooks) in the container namespaces,
 as described by the OCI container configuration file.
-4. **fixme** [Set up the container networking](https://github.com/clearcontainers/runtime/blob/master/documentation/architecture.md#networking).
+4. [Set up the container networking](https://github.com/clearcontainers/runtime/wiki/Clear-Containers-Architecture#networking)
 This must happen after all hooks are done as one of them is potentially setting
 the container networking namespace up.
 5. Create the virtual machine running the container process. The VM `systemd` instance will spawn the `agent` daemon.
@@ -154,9 +154,9 @@ However the container process itself is not yet running as one needs to call `do
 
 ##### [`start`](https://github.com/clearcontainers/runtime/blob/master/start.go)
 
-On namespace containers `start` launches a traditional Linux container process in its own set of namespaces.
+With namespace containers `start` launches a traditional Linux container process in its own set of namespaces.
 With Clear Containers, the main task of `cc-runtime` is to create and start a container within the
-pod that got created during the `create` step. In practice, this means `cc-runtime` follows
+pod that was created during the `create` step. In practice, this means `cc-runtime` follows
 these steps:
 
 1. `cc-runtime` connects to `cc-proxy` and sends it the `attach` command to let it know which pod
@@ -354,13 +354,13 @@ Mapping files using DAX provides a number of benefits over more traditional VM
 file and device mapping mechanisms:
 
 - Mapping as a direct access devices allows the guest to directly access
-the memory pages (such as via eXicute In Place (XIP)), bypassing the guest
+the host memory pages (such as via eXicute In Place (XIP)), bypassing the guest
 page cache. This provides both time and space optimisations.
 - Mapping as a direct access device inside the VM allows pages from the
 host to be demand loaded using page faults, rather than having to make requests
 via a virtualised device (causing expensive VM exits/hypercalls), thus providing
 a speed optimisation.
-- Utilising shmem MAP_SHARED on the host allows the host to efficiently
+- Utilising MAP_SHARED shared memory on the host allows the host to efficiently
 share pages.
 
 Clear Containers uses the following steps to set up the DAX mappings:
