@@ -282,15 +282,15 @@ With Clear Containers, `cc-shim` acts as the container process that `container p
 `cc-shim` has an implicit knowledge about which VM agent will handle those streams and signals and thus act as
 an encapsulation layer between `container process reaper` and the `agent`:
 
-- It fragments and encapsulates the standard input stream from containerd-shim into `agent` stream packets:
+- It fragments and encapsulates the standard input stream from containerd-shim into `cc-proxy` stream frames:
 ```
   ┌───────────────────────────┬───────────────┬────────────────────┐
   │ IO stream sequence number │ Packet length │ IO stream fragment │
   │         (8 bytes)         │    (4 bytes)  │                    │
   └───────────────────────────┴───────────────┴────────────────────┘
 ```
-- It de-encapsulates and assembles standard output and error `agent` stream packets
-into an output stream that it forwards to `containerd-shim`
+- It de-encapsulates and assembles standard output and error `cc-proxy` stream frames
+into an output stream that it forwards to `container process reaper`
 - It translates all UNIX signals (except `SIGKILL` and `SIGSTOP`) into `agent`
 `KILLCONTAINER` commands that it sends to the VM via `cc-proxy` UNIX named socket.
 
