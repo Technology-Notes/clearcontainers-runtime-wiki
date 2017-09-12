@@ -346,8 +346,110 @@ interfaces with `TAP` ones:
 
 ![Clear Containers networking](arch-images/network.png)
 
-The [virtcontainers library](https://github.com/containers/virtcontainers#cnm) has some more
-details on how `cc-runtime` implements [CNM](https://github.com/docker/libnetwork/blob/master/docs/design.md).
+Clear Containers supports both
+[CNM](https://github.com/docker/libnetwork/blob/master/docs/design.md#the-container-network-model)
+and [CNI](https://github.com/containernetworking/cni) for networking management.
+
+##### CNM
+
+![High-level CNM Diagram](arch-images/CNM_overall_diagram.png)
+
+__CNM lifecycle__
+
+1.  RequestPool
+
+2.  CreateNetwork
+
+3.  RequestAddress
+
+4.  CreateEndPoint
+
+5.  CreateContainer
+
+6.  Create config.json
+
+7.  Create PID and network namespace
+
+8.  ProcessExternalKey
+
+9.  JoinEndPoint
+
+10. LaunchContainer
+
+11. Launch
+
+12. Run container
+
+![Detailed CNM Diagram](arch-images/CNM_detailed_diagram.png)
+
+__Runtime network setup with CNM__
+
+1. Read config.json
+
+2. Create the network namespace
+
+3. Call the prestart hook (from inside the netns)
+
+4. Scan network interfaces inside netns and get the name of the interface
+created by prestart hook
+
+5. Create bridge, TAP, and link all together with network interface previously
+created
+
+##### CNI
+
+![CNI Diagram](arch-images/CNI_diagram.png)
+
+__Runtime network setup with CNI__
+
+1. Create the network namespace
+
+2. Get CNI plugin information
+
+3. Start the plugin (providing previously created netns) to add a network
+described into /etc/cni/net.d/ directory. At that time, the CNI plugin will
+create the cni0 network interface and a veth pair between the host and the created
+netns. It links cni0 to the veth pair before to exit.
+
+4. Create bridge, TAP, and link all together with network interface previously
+created
+
+5. Start VM inside the netns and start the container
+
+#### Storage
+Container workloads are shared with the virtualized environment through 9pfs.
+The devicemapper storage driver is a special case. The driver uses dedicated
+block devices rather than formatted filesystems, and operates at the block level
+rather than the file level. This knowledge has been used to directly use the
+underlying block device instead of the overlay file system for the container
+root file system. The block device maps to the top read-write layer for the overlay.
+This approach gives much better I/O performance compared to using 9pfs to share
+the container file system.
+
+The approach above does introduce a limitation in terms of dynamic file copy
+in/out of the container via `docker cp` operations. The copy operation from
+host to container accesses the mounted file system on the host side. This is
+not expected to work and may lead to inconsistencies as the block device will
+be simultaneously written to, from two different mounts. The copy operation from
+container to host will work, provided the user calls `sync(1)` from within the
+container prior to the copy to make sure any outstanding cached data is written
+to the block device.
+
+```
+docker cp [OPTIONS] CONTAINER:SRC_PATH HOST:DEST_PATH
+docker cp [OPTIONS] HOST:SRC_PATH CONTAINER:DEST_PATH
+```
+
+FIXME:
+The devicemapper block device can only be used when creating a pod. If a container
+with a devicemapper rootfs is added to a pod, after the VM has started, the
+devicemapper block device will not be used. The container will fallback to using
+the overlay file system instead. This should be fixed once capability to hot-plug
+virtio block devices is added.
+
+Users can check to see if the container uses devicemapper block device as its
+rootfs by calling `mount(8)` within the counter.  If devicemapper block device
+is used, '/' will be mounted on `/dev/vda`.
 
 ## Appendices
 
