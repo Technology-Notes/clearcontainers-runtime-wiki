@@ -122,15 +122,15 @@ by a set of namespaces (UTS, PID, mount, IPC, user and network). `cc-runtime` ca
 The `agent` uses a communication protocol defined by the [hyperstart](https://github.com/hyperhq/hyperstart) project. This was done to maintain backward compatibility with the `hyperstart` agent used in 2.1 version of `Clear Containers`.
 
 The `agent` supports the following commands:
-- StartPodCmd: Sets up a pod in a newly created VM. 
-- NewContainerCmd: Creates a new container within a pod. This needs to be sent after the StartPodCmd has been issued for starting a pod. This starts the container process as well.
-- ExecCmd: Executes a new process within an already running container.
-- KillContainerCmd: `cc-shim` uses this to send signals to a container process.
-- WinsizeCmd: `cc-shim` uses this to change terminal size of the terminal associated with a container.
-- RemoveContainerCmd: Removes a container from the pod. This command will fail for a container in running state.
-- Destroypod: Removes all containers within a pod . All containers need to be in stopped state for this command to succeed. Frees resources associated with the pod.
+- `StartPodCmd`: Sets up a pod in a newly created VM. 
+- `NewContainerCmd`: Creates a new container within a pod. This needs to be sent after the StartPodCmd has been issued for starting a pod. This starts the container process as well.
+- `ExecCmd`: Executes a new process within an already running container.
+- `KillContainerCmd`: `cc-shim` uses this to send signals to a container process.
+- `WinsizeCmd`: `cc-shim` uses this to change terminal size of the terminal associated with a container.
+- `RemoveContainerCmd`: Removes a container from the pod. This command will fail for a container in running state.
+- `Destroypod`: Removes all containers within a pod . All containers need to be in stopped state for this command to succeed. Frees resources associated with the pod.
 
-The `agent` code makes use of `libcontainer`(https://github.com/opencontainers/runc/tree/master/libcontainer) to manage the lifecycle of the container. This way the `agent` reuses most of the code used by `docker-runc`[runc library libcontainers](https://github.com/opencontainers/runc).
+The `agent` makes use of [`libcontainer`](https://github.com/opencontainers/runc/tree/master/libcontainer) to manage the lifecycle of the container. This way the `agent` reuses most of the code used by [`docker-runc`](https://github.com/opencontainers/runc).
 
 ## Runtime
 
