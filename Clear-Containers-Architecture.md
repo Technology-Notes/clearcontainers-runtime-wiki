@@ -184,7 +184,6 @@ a token. This token uniquely identifies a process within a container inside the 
 7. The `cc-shim` connects to the proxy and signals which container process it is
 going to monitor by passing its token through the `cc-proxy` `connectShim` command.
 
-
 ![Docker create](arch-images/create.png)
 
 At this point, the virtual machine that will run the containers workloads
@@ -330,9 +329,6 @@ that they stop monitoring their container process.
 
 For more details about `cc-proxy`'s protocol, theory of operations or debugging tips, please read
 [`cc-proxy` README](https://github.com/clearcontainers/proxy) or the [proxy api `godoc`](https://godoc.org/github.com/clearcontainers/proxy/api).
-
-### Proxy protocol diagram sequence
-![Proxy protocol ](https://raw.githubusercontent.com/clearcontainers/proxy/master/docs/proxy-protocol-sequence-diagram.svg?sanitize=true)
 
 ## Shim
 
