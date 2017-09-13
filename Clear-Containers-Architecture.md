@@ -13,6 +13,7 @@
     * [Hypervisor](#hypervisor)
     * [Agent](#agent)
     * [Runtime](#runtime)
+        * [Configuration](#configuration)
         * [Significant commands](#significant-commands)
             * [create](#create)
             * [start](#start)
@@ -145,6 +146,17 @@ and launching `cc-shim` instances.
 provides a generic, runtime-specification agnostic, hardware-virtualized containers
 library.
 
+### Configuration
+
+The runtime uses a TOML format configuration file called `configuration.toml`. By
+default this file is installed in the `/etc/clear-containers` directory.
+Most users will not need to modify the configuration file.
+
+The file is well commented and provides a few "knobs" that can modify the
+behaviour of the runtime.
+
+The configuration file is also used to enable runtime debug output (see
+https://github.com/clearcontainers/runtime#debugging).
 
 ### Significant commands
 
