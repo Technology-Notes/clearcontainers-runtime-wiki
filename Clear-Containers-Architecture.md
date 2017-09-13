@@ -1,4 +1,4 @@
-3# Clear Containers Architecture
+# Clear Containers Architecture
 
 ## TODO:
 ```
@@ -188,9 +188,9 @@ going to monitor by passing its token through the `cc-proxy` `connectShim` comma
 
 ![Docker create](arch-images/create.png)
 
-At this point, the virtual machine that will run the containers workload
+At this point, the virtual machine that will run the containers workloads
 is up and running, and the [`agent`](#agent) is ready to process container
-lifecycle commands. The pod inside the virtual machine is not created, and
+life cycle commands. The pod inside the virtual machine is not created, and
 the containers are not running yet. This will be done through the OCI 
 [`start`](#start) command
 
@@ -203,16 +203,17 @@ start all containers within this pod.
 In practice, this means `cc-runtime` will run through the following steps:
 
 1. `cc-runtime` connects to `cc-proxy` and sends it the `attach` command to
-let it know which pod we want to use to create and start the new container.
+let it know which VM we want to use to create a pod and start the new container.
 2. `cc-runtime` sends an agent `STARTPOD` command via `cc-proxy`.
-3. `cc-runtime` sends an agent `NEWCONTAINER` command to create and start a new
-container in a given pod. The command is sent to `cc-proxy` who forwards it to
-the right agent instance running in the appropriate guest.
-a signal and I/O streams proxy between `containerd-shim` and `cc-proxy`.
+This creates the container pod.
+3. `cc-runtime` sends an agent `NEWCONTAINER` command via `cc-proxy` in order to
+create and start a new container in a given pod.
+The command is sent to `cc-proxy` who forwards it to the right agent instance
+running in the appropriate guest.
 
 #### [`exec`](https://github.com/clearcontainers/runtime/blob/master/exec.go)
 
-`docker exec` allows one to run an additional command within an already running
+OCI `exec` allows one to run an additional command within an already running
 container. With Clear Containers, this translates into sending a `EXECCMD` command
 to the agent so that it runs a command into a running container belonging to a
 certain pod. All I/O streams from the executed command will be passed back to
@@ -222,17 +223,19 @@ The `exec` code path is partly similar to the `create` one and `cc-runtime`
 goes through the following steps:
 
 1. `cc-runtime` connects to `cc-proxy` and sends it the `attach` command to let
-it know which pod we want to use to run the `exec` command.
+it know which VM it wants to run the `exec` command.
 2. `cc-runtime` receives a token from `cc-proxy` based on this connection.
-3. `cc-runtime` sends an agent `EXECMD` command to start the command in the
+3. `cc-runtime` spawns a `cc-shim` process providing two arguments:
+  `cc-shim --token $(token) --uri $(uri)`
+   * The proxy URL, which can be either a UNIX or a TCP socket.
+   * The token for the container process it needs to monitor.
+The `cc-shim` process will forward the output streams (stderr and stdout) to
+either `containerd-shim` in the Docker use cases or `conmon` for the Kubernetes
+deployements.
+4. `cc-runtime` sends an agent `EXECMD` command to start the command in the
 right container. The command is sent to `cc-proxy` who forwards it to the right
 agent instance running in the appropriate guest.
-4. Spawn the `cc-shim` process providing two arguments:
-  `cc-shim --token $(token) --uri $(uri)
-   * The proxy URL
-   * The token provided by the proxy.
-The `cc-shim` process will forward the output streams (stderr and stdout) to
-either containerd or conmon
+
 
 Now the `exec`'ed process is running in the virtual machine, sharing the UTS,
 PID, mount and IPC namespaces with the container's init process.
