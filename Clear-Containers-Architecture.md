@@ -155,11 +155,11 @@ Here we will describe how `cc-runtime` handles the most important OCI commands.
 When handling the OCI `create` command, `cc-runtime` goes through the following steps:
 
 1. Create the container namespaces according to the container OCI configuration
-file (only the network and mount namespaces are currently supported).
+file (only the networking namespace is currently supported).
 2. Create the virtual machine running the container process. The VM `systemd` instance will spawn the `agent` daemon.
 3. Register the virtual machine with `cc-proxy`.
 4. The `cc-proxy` waits for the agent to signal that it is ready and then returns
-a token which is unique to this registration.
+a token. This token uniquely identifies a process within a container inside the virtual machine.
 5. Spawn the `cc-shim` process providing two arguments:
   `cc-shim --token $(token) --uri $(uri)`
    * The proxy URL, which can be either a UNIX or a TCP socket.
