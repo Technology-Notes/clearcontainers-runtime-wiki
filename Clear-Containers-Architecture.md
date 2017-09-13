@@ -158,7 +158,7 @@ behaviour of the runtime.
 The configuration file is also used to enable runtime debug output (see
 https://github.com/clearcontainers/runtime#debugging).
 
-### Significant commands
+### Significant OCI commands
 
 Here we will describe how `cc-runtime` handles the most important OCI commands.
 
@@ -188,9 +188,10 @@ going to monitor by passing its token through the `cc-proxy` `connectShim` comma
 
 ![Docker create](arch-images/create.png)
 
-At this point, the container sandbox is created in the virtual machine. The
-container process itself is not yet running as one needs to call `docker start`
-to actually start it.
+At this point, the virtual machine that will run the containers workload
+is up and running. The pod inside the virtual machine is not created, and
+the containers are not running yet. This will be done through the OCI 
+[`start`](#start) command
 
 #### [`start`](https://github.com/clearcontainers/runtime/blob/master/start.go)
 
