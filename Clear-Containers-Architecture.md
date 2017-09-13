@@ -163,7 +163,9 @@ a token. This token uniquely identifies a process within a container inside the 
 5. Spawn the `cc-shim` process providing two arguments:
   `cc-shim --token $(token) --uri $(uri)`
    * The proxy URL, which can be either a UNIX or a TCP socket.
-   * The token for the container process it needs to monitor
+   * The token for the container process it needs to monitor.
+6. The `cc-shim` connects to the proxy and signals which container process it is
+going to monitor by passing its token through the `cc-proxy` connection command.
 
 --- WIP:
 x. Run all the [OCI hooks](https://github.com/opencontainers/runtime-spec/blob/master/config.md#hooks) in the container namespaces,
