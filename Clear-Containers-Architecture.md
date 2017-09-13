@@ -42,7 +42,7 @@ architecture or the [Kubernetes Container Runtime Interface (CRI)](https://githu
 ![Docker and Clear Containers](arch-images/docker-cc.png)
 
 `cc-runtime` creates a QEMU/KVM virtual machine for each container the Docker
-engine creates. <-- we probably don't need to make this docker specific here?
+engine or Kubernetes' `kubelet` creates.
 
 The container process is then spawned by an
 [agent](https://github.com/clearcontainers/agent) running as a daemon inside
@@ -130,7 +130,7 @@ The `agent` supports the following commands:
 - `RemoveContainerCmd`: Removes a container from the pod. This command will fail for a container in running state.
 - `Destroypod`: Removes all containers within a pod . All containers need to be in stopped state for this command to succeed. Frees resources associated with the pod.
 
-The `agent` makes use of [`libcontainer`](https://github.com/opencontainers/runc/tree/master/libcontainer) to manage the lifecycle of the container. This way the `agent` reuses most of the code used by [`docker-runc`](https://github.com/opencontainers/runc).
+The `agent` makes use of [`libcontainer`](https://github.com/opencontainers/runc/tree/master/libcontainer) to manage the lifecycle of the container. This way the `agent` reuses most of the code used by [`runc`](https://github.com/opencontainers/runc).
 
 ## Runtime
 
@@ -141,7 +141,7 @@ and launching `cc-shim` instances.
 
 `cc-runtime` heavily utilizes the
 [virtcontainers project](https://github.com/containers/virtcontainers), which
-provides a generic runtime-specification agnostic hardware-virtualized containers
+provides a generic, runtime-specification agnostic, hardware-virtualized containers
 library.
 
 Here we will describe how `cc-runtime` handles the most important OCI commands.
@@ -157,8 +157,8 @@ file (only the network and mount namespaces are currently supported).
 4. The `cc-proxy` waits for the agent to signal that it is ready and then returns
 a token which is unique to this registration.
 5. Spawn the `cc-shim` process providing two arguments:
-  `cc-shim --token $(token) --uri $(uri)
-   * The proxy URL
+  `cc-shim --token $(token) --uri $(uri)`
+   * The proxy URL, which can be either a UNIX or a TCP socket.
    * The token for the container process it needs to monitor
 
 --- WIP:
