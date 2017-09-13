@@ -170,6 +170,9 @@ When handling the OCI `create` command, `cc-runtime` goes through the following 
 OCI configuration file. We only support networking namespaces for now, but will support
 more of them later.
 2. Run all the [prestart OCI hooks](https://github.com/opencontainers/runtime-spec/blob/master/config.md#hooks) in the host namespaces created in step 1, as described by the OCI container configuration file.
+3. [Set up the container networking namespace up](#networking).
+This is when all networking interfaces are created and setup inside the namespace, according to the selected
+pod networking model (CNM for Docker or CNI for Kubernetes).
 3. Create and start the virtual machine running the container process. The VM will run inside
 the host namespaces created during step 1, and its `systemd` instance will spawn the `agent` daemon.
 4. Register the virtual machine with `cc-proxy`.
@@ -180,13 +183,7 @@ a token. This token uniquely identifies a process within a container inside the 
    * The proxy URL, which can be either a UNIX or a TCP socket.
    * The token for the container process it needs to monitor.
 7. The `cc-shim` connects to the proxy and signals which container process it is
-going to monitor by passing its token through the `cc-proxy` connection command.
- 
-
---- WIP:
-x. [Set up the container networking](#networking)
-This must happen after all hooks are done as one of them is potentially setting
-the container networking namespace up.
+going to monitor by passing its token through the `cc-proxy` `connectShim` command.
 
 
 ![Docker create](arch-images/create.png)
