@@ -210,6 +210,8 @@ create and start a new container in a given pod.
 The command is sent to `cc-proxy` who forwards it to the right agent instance
 running in the appropriate guest.
 
+![Docker start](arch-images/start.png)
+
 #### [`exec`](https://github.com/clearcontainers/runtime/blob/master/exec.go)
 
 OCI `exec` allows one to run an additional command within an already running
