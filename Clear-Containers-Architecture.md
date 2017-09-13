@@ -13,11 +13,12 @@
     * [Hypervisor](#hypervisor)
     * [Agent](#agent)
     * [Runtime](#runtime)
-        * [create](#create)
-        * [start](#start)
-        * [exec](#exec)
-        * [kill](#kill)
-        * [delete](#delete)
+        * [Significant commands](#significant-commands)
+            * [create](#create)
+            * [start](#start)
+            * [exec](#exec)
+            * [kill](#kill)
+            * [delete](#delete)
     * [Proxy](#proxy)
     * [Shim](#shim)
     * [Networking](#networking)
@@ -144,9 +145,12 @@ and launching `cc-shim` instances.
 provides a generic, runtime-specification agnostic, hardware-virtualized containers
 library.
 
+
+### Significant commands
+
 Here we will describe how `cc-runtime` handles the most important OCI commands.
 
-### [`create`](https://github.com/clearcontainers/runtime/blob/master/create.go)
+#### [`create`](https://github.com/clearcontainers/runtime/blob/master/create.go)
 
 When handling the OCI `create` command, `cc-runtime` goes through the following steps:
 
@@ -176,7 +180,7 @@ At this point, the container sandbox is created in the virtual machine. The
 container process itself is not yet running as one needs to call `docker start`
 to actually start it.
 
-### [`start`](https://github.com/clearcontainers/runtime/blob/master/start.go)
+#### [`start`](https://github.com/clearcontainers/runtime/blob/master/start.go)
 
 With namespace containers `start` launches a traditional Linux container process
 in its own set of namespaces. With Clear Containers, the main task of `cc-runtime`
@@ -191,7 +195,7 @@ container in a given pod. The command is sent to `cc-proxy` who forwards it to
 the right agent instance running in the appropriate guest.
 a signal and I/O streams proxy between `containerd-shim` and `cc-proxy`.
 
-### [`exec`](https://github.com/clearcontainers/runtime/blob/master/exec.go)
+#### [`exec`](https://github.com/clearcontainers/runtime/blob/master/exec.go)
 
 `docker exec` allows one to run an additional command within an already running
 container. With Clear Containers, this translates into sending a `EXECCMD` command
@@ -218,7 +222,7 @@ either containerd or conmon
 Now the `exec`'ed process is running in the virtual machine, sharing the UTS,
 PID, mount and IPC namespaces with the container's init process.
 
-### [`kill`](https://github.com/clearcontainers/runtime/blob/master/kill.go)
+#### [`kill`](https://github.com/clearcontainers/runtime/blob/master/kill.go)
 
 When sending the OCI `kill` command, container runtimes should send a [UNIX signal](https://en.wikipedia.org/wiki/Unix_signal)
 to the container process.
@@ -237,7 +241,7 @@ it know on which pod the container it is trying to `kill` is running.
 running on the guest. The command is sent to `cc-proxy` who forwards it to the
 right agent instance running in the appropriate guest.
 
-### [`delete`](https://github.com/clearcontainers/runtime/blob/master/delete.go)
+#### [`delete`](https://github.com/clearcontainers/runtime/blob/master/delete.go)
 
 `docker delete` is about deleting all resources held by a stopped/killed container.
 Running containers can not be `delete`d unless the OCI runtime is explictly being
