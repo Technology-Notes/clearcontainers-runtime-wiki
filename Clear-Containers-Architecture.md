@@ -244,20 +244,29 @@ PID, mount and IPC namespaces with the container's init process.
 
 When sending the OCI `kill` command, container runtimes should send a [UNIX signal](https://en.wikipedia.org/wiki/Unix_signal)
 to the container process.
-In the Clear Containers context, this means `cc-runtime` needs a way to send a
-signal to the container process within the virtual machine. As `cc-shim` is responsible
-for forwarding signals to its associated running containers, `cc-runtime` naturally
-calls `kill` on the `cc-shim` PID.
+In the Clear Containers context, this means `cc-runtime` needs to handle 2 resources:
 
-However, `cc-shim` is not able to trap `SIGKILL` and `SIGSTOP` and thus `cc-runtime`
-needs to follow a different code path for those 2 signals.
-Instead of `kill`'ing the `cc-shim` PID, it will go through the following steps:
+1. It needs to send the signal to the container running on the VM.
+2. It needs to signal the [`shim`](#shim) since we don't want to leave dangling
+`cc-shim` instances on the host in case the container process terminates inside
+the VM.
+
+To do so, `cc-runtime` goes through the following steps:
 
 1. `cc-runtime` connects to `cc-proxy` and sends it the `attach` command to let
-it know on which pod the container it is trying to `kill` is running.
+it know on which VM the container it is trying to `kill` is running.
 2. `cc-runtime` sends an agent `KILLCONTAINER` command to `kill` the container
 running on the guest. The command is sent to `cc-proxy` who forwards it to the
 right agent instance running in the appropriate guest.
+
+After step #2, if the container process terminates in the VM, `cc-proxy` will
+forward the process exit code to the `shim`. The `shim` will then disconnect
+from `cc-proxy` and terminates as well.
+
+One corner case `cc-runtime` also needs to handle is when we receive a signal
+for a container that's not yet running. In that case, `cc-runtime` simply stops
+`cc-shim` for the `SIGTERM` or `SIGKILL` signals and does nothing for all other
+signals.
 
 #### [`delete`](https://github.com/clearcontainers/runtime/blob/master/delete.go)
 
