@@ -2,7 +2,6 @@
 
 ## TODO:
 ```
--discussion around configuration.toml?
 -do we need/want a more thorough description of virtcontainers?
 -replace the create process png with a UML flow instead (and remove from proxy section)?
 -cleanup of agent section
@@ -275,21 +274,31 @@ Running containers can not be `delete`d unless the OCI runtime is explictly bein
 asked to. In that case it will first `kill` the container and only then `delete`
 it.
 
-The resources held by a Clear Container are quite different from the ones held
-by a host namespace container e.g. run by `runc`. `cc-runtime` needs mostly to
-delete the pod holding the stopped container on the virtual machine, shut the
-hypervisor down and finally delete all related proxy resources:
+The `delete` code path differs significantly between having to delete one container
+inside a pod and having to delete an entire pod. In the former case, `cc-runtime`
+will only send a `SIGKILL` signal to the container process while the latter case is
+about completely deleting the whole thing: the pod, its containers, all `cc-shim`
+instances and the virtual machine itself.
+Also, the latter case is only supported by Kubernetes. Docker always asked for the
+former one.
+
+Below we will focus on describing the entire pod deletion process and we will
+look at the generic, multi-containers pod setup. Docker is just a particular case
+for single container pods.
 
 1. `cc-runtime` connects to `cc-proxy` and sends it the `attach` command to let
 it know on which pod the container it is trying to to `delete` is running.
-2. `cc-runtime` sends an agent `DESTROYPOD` command to `destroy` the pod holding
-the container running on the guest. The command is sent to `cc-proxy` who forwards
-it to the right agent instance running in the appropriate guest.
-3. After deleting the last running pod, the `agent` will gracefully shut the
-virtual machine down.
+2. `cc-runtime` terminates all container processes within a pod by sending the
+`KILLCONTAINER` command to all of them.
+3. As each container process termination will be forwarded to all associated `cc-shim`
+instances, `cc-runtime` waits for all of them to terminate as well.
 4. `cc-runtime` sends the `UnregisterVM` command to `cc-proxy`, to let it know
-that a given virtual machine is shut down. `cc-proxy` will then clean all its
-internal resources associated with this VM.
+that the virtual machine that used to host the pod should no longer be used.
+5. `cc-runtime` explicitly shuts the virtual machine down.
+6. The host namespaces are cleaned up and destroyed. In particular, `cc-runtime`
+offloads the networking namespace cleanup path by calling into the specific
+networking model (CNM or CNI) removal method.
+7. All remaining pod related resources on the host are deleted.
 
 ## Proxy
 
