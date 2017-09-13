@@ -269,7 +269,7 @@ signals.
 
 #### [`delete`](https://github.com/clearcontainers/runtime/blob/master/delete.go)
 
-`docker delete` is about deleting all resources held by a stopped/killed container.
+`delete` is about deleting all resources held by a stopped/killed container.
 Running containers can not be `delete`d unless the OCI runtime is explictly being
 asked to. In that case it will first `kill` the container and only then `delete`
 it.
@@ -279,8 +279,8 @@ inside a pod and having to delete an entire pod. In the former case, `cc-runtime
 will only send a `SIGKILL` signal to the container process while the latter case is
 about completely deleting the whole thing: the pod, its containers, all `cc-shim`
 instances and the virtual machine itself.
-Also, the latter case is only supported by Kubernetes. Docker always asked for the
-former one.
+Also, the latter case is only supported by Kubernetes whereas Docker always asks
+for the former one.
 
 Below we will focus on describing the entire pod deletion process and we will
 look at the generic, multi-containers pod setup. Docker is just a particular case
@@ -307,22 +307,24 @@ to multiple `cc-shim` and `cc-runtime` clients.
 Only a single instance of `cc-proxy` per host is necessary as it can be used for several different VMs.
 Its main role is to:
 - Arbitrate access to the `agent` control channel between all the `cc-runtime` instances and the `cc-shim` ones.
-- Route the I/O streams between the various `cc-shim` instances and the `agent`.
+- Route the I/O streams and signals between the various `cc-shim` instances and the `agent`.
 
-`cc-proxy` provides 2 client interfaces:
+`cc-proxy` API is available through a single socket for all `cc-shim` and `cc-runtime` instances
+to connect to. `cc-proxy` can be configured to use a UNIX or a TCP socket, and by default
+will handle connection over a UNIX socket.
 
-- A UNIX, named socket for all `cc-runtime` instances on the host to send commands to `cc-proxy`.
-- One socket pair per `cc-shim` instance, to send stdin and receive stdout and stderr I/O streams. See the
-[cc-shim section](#shim)
-for more details about that interface.
-
-The protocol on the `cc-proxy` UNIX named socket supports the following commands:
-- `RegisterVM`: Used first after connecting to the proxy socket. It is used to let the proxy know about a new container on the system along with the paths go agent's command and I/O channels (AF_UNIX sockets).
-- `AttachVM`: It can be used to associate clients to an already known VM.
-- `UnregisterVM`: payload does the opposite of what `RegisterVM` does, indicating to the proxy it should release resources created by `RegisterVM`
-- `Hyper` : This payload will forward an hyperstart command to agent.
-- `ConnectShim`: Used to identify a shim against the proxy.
-- `DisconnectShim`: This pay load will unregister a shim from the proxy.
+The protocol on the `cc-proxy` socket supports the following commands:
+- `RegisterVM`: Used by `cc-runtime` to let `cc-proxy` know about a newly created virtual machine. When registering a new VM, `cc-runtime` will ask `cc-proxy` for a token and pass that token to the `cc-shim` instance it will eventually create for handling the container process inside that VM.
+- `UnregisterVM`: Does the opposite of what `RegisterVM` does, indicating to the proxy it should release resources created by `RegisterVM`.
+- `AttachVM`: It can be used to associate clients to an already known VM. Optionally `AttachVM` senders
+can ask `cc-proxy` for a token. In the OCI `exec` command case, this token will be used by the `cc-shim`
+instance that monitors the executed process inside the container.
+- `Hyper` : This payload will forward an hyperstart command to the `agent`.
+- `ConnectShim`: Used by `cc-shim` instances to connect to `cc-proxy` and let it know which container
+process it wants to monitor. `cc-shim` sends the token they've been given by `cc-runtime` as part of the `ConnectShim` payload. With that information, `cc-proxy` builds its I/O and signal multiplexing
+routes between the VM process containers and the host `cc-shim` instances.
+- `DisconnectShim`: Used by `cc-shim` instances to disconnect themselves from `cc-proxy` and let it know
+that they stop monitoring their container process.
 
 For more details about `cc-proxy`'s protocol, theory of operations or debugging tips, please read
 [`cc-proxy` README](https://github.com/clearcontainers/proxy) or the [proxy api `godoc`](https://godoc.org/github.com/clearcontainers/proxy/api).
