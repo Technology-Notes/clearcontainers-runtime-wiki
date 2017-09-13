@@ -114,7 +114,7 @@ machine type.
  
 ## Agent
 
-['agent'](https://github.com/clearcontainers/agent) is a daemon running in the
+[`agent`](https://github.com/clearcontainers/agent) is a daemon running in the
 guest as a supervisor for managing containers and processes potentially running
 within those containers.
 
