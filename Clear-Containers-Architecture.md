@@ -189,7 +189,8 @@ going to monitor by passing its token through the `cc-proxy` `connectShim` comma
 ![Docker create](arch-images/create.png)
 
 At this point, the virtual machine that will run the containers workload
-is up and running. The pod inside the virtual machine is not created, and
+is up and running, and the [`agent`](#agent) is ready to process container
+lifecycle commands. The pod inside the virtual machine is not created, and
 the containers are not running yet. This will be done through the OCI 
 [`start`](#start) command
 
@@ -197,8 +198,9 @@ the containers are not running yet. This will be done through the OCI
 
 With namespace containers `start` launches a traditional Linux container process
 in its own set of namespaces. With Clear Containers, the main task of `cc-runtime`
-is to create and start a container within the pod that was created during the
-`create` step. In practice, this means `cc-runtime` follows these steps:
+is to ask the [`agent`](#agent) to create a pod inside the virtual machine and then
+start all containers within this pod.
+In practice, this means `cc-runtime` will run through the following steps:
 
 1. `cc-runtime` connects to `cc-proxy` and sends it the `attach` command to
 let it know which pod we want to use to create and start the new container.
