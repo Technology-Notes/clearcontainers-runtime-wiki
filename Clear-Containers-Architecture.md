@@ -1,7 +1,8 @@
-# Clear Containers Architecture
+3# Clear Containers Architecture
 
 ## TODO:
 ```
+-discussion around configuration.toml?
 -do we need/want a more thorough description of virtcontainers?
 -replace the create process png with a UML flow instead (and remove from proxy section)?
 -cleanup of agent section
@@ -12,7 +13,6 @@
     * [Hypervisor](#hypervisor)
     * [Agent](#agent)
     * [Runtime](#runtime)
-        * [Configuration](#configuration)
         * [Significant commands](#significant-commands)
             * [create](#create)
             * [start](#start)
@@ -145,18 +145,6 @@ and launching `cc-shim` instances.
 provides a generic, runtime-specification agnostic, hardware-virtualized containers
 library.
 
-### Configuration
-
-The runtime uses a configuration file called `configuration.toml`. By
-default this file is installed in the `/etc/clear-containers` directory.
-Most users will not need to modify the configuration file.
-
-As the name suggests, the configuration file is written in TOML format.
-It is well commented and provides a few "knobs" that can modify the
-behaviour of the runtime.
-
-The configuration file is also used to enable runtime debug output (see
-https://github.com/clearcontainers/runtime#debugging).
 
 ### Significant commands
 
@@ -166,23 +154,24 @@ Here we will describe how `cc-runtime` handles the most important OCI commands.
 
 When handling the OCI `create` command, `cc-runtime` goes through the following steps:
 
-1. Create the container namespaces according to the container OCI configuration
-file (only the networking namespace is currently supported).
-2. Create the virtual machine running the container process. The VM `systemd` instance will spawn the `agent` daemon.
-3. Register the virtual machine with `cc-proxy`.
-4. The `cc-proxy` waits for the agent to signal that it is ready and then returns
+1. Create the networking container namespace on the host, according to the container
+OCI configuration file. We only support networking namespaces for now, but will support
+more of them later.
+2. Run all the [prestart OCI hooks](https://github.com/opencontainers/runtime-spec/blob/master/config.md#hooks) in the host namespaces created in step 1, as described by the OCI container configuration file.
+3. Create and start the virtual machine running the container process. The VM will run inside
+the host namespaces created during step 1, and its `systemd` instance will spawn the `agent` daemon.
+4. Register the virtual machine with `cc-proxy`.
+5. The `cc-proxy` waits for the agent to signal that it is ready and then returns
 a token. This token uniquely identifies a process within a container inside the virtual machine.
-5. Spawn the `cc-shim` process providing two arguments:
+6. Spawn the `cc-shim` process providing two arguments:
   `cc-shim --token $(token) --uri $(uri)`
    * The proxy URL, which can be either a UNIX or a TCP socket.
    * The token for the container process it needs to monitor.
-6. The `cc-shim` connects to the proxy and signals which container process it is
+7. The `cc-shim` connects to the proxy and signals which container process it is
 going to monitor by passing its token through the `cc-proxy` connection command.
+ 
 
 --- WIP:
-x. Run all the [OCI hooks](https://github.com/opencontainers/runtime-spec/blob/master/config.md#hooks) in the container namespaces,
-as described by the OCI container configuration file.
-
 x. [Set up the container networking](#networking)
 This must happen after all hooks are done as one of them is potentially setting
 the container networking namespace up.
