@@ -5,15 +5,20 @@ This wiki is WIP...
 This page will contain information to help you understand and use `cc-runtime`.
 Also you will find information on how to install `cc-runtime` and its dependencies to launch Clear Containers 3.0.
 
-## Other system components
+## Quickstart
 
+- See the [installation pages](https://github.com/clearcontainers/runtime/wiki/Installation).
+
+## System components
+
+- Rntime (`cc-runtime`): https://github.com/clearcontainers/runtime
 - Hypervisor (`qemu-lite`): https://github.com/clearcontainers/qemu
 - Proxy process (`cc-proxy`): https://github.com/clearcontainers/proxy
 - Process shim (`cc-shim`): https://github.com/clearcontainers/shim
 - VM agent process (`cc-agent`): https://github.com/clearcontainers/agent
 - Guest kernel: https://github.com/clearcontainers/linux
 
-## Additional related repositories
+## Related repositories
 
 - O/S builder: https://github.com/clearcontainers/osbuilder
 
