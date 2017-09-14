@@ -123,7 +123,7 @@ by a set of namespaces (NS, UTS, IPC and PID). `cc-runtime` can run several cont
 `cc-agent` uses a communication protocol defined by the [hyperstart](https://github.com/hyperhq/hyperstart) project. This was chosen to maintain backward compatibility with the `hyperstart` agent used in the 2.x `Clear Containers` architecture.
 
 The `cc-agent` interface consists of:
-- A control serial channel over which the `cc-agent` sends and receives specific commands for controlling and managing pods and containers. Detailed information about the commands can be found at [`cc-agent` API](https://github.com/clearcontainers/agent/tree/master/api)
+- A control serial channel over which the `cc-agent` sends and receives specific commands for controlling and managing pods and containers. Detailed information about the commands can be found at [`cc-agent` API](https://github.com/clearcontainers/agent/tree/master/api).
 - An I/O serial channel for passing the container processes output streams (stdout, stderr) back to `cc-proxy` and receiving the input stream (stdin) for them. As all streams for all containers are going through one single serial channel, the `cc-agent` prepends them with container specific sequence numbers. There are at most two sequence numbers per container process: one for stdout and stdin, and another one for stderr.
 
 `cc-agent` supports the following commands:
