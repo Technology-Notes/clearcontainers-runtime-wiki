@@ -2,6 +2,7 @@
 
 ## TODO:
 ```
+- No mention of benefits of hardware-enforced security benefits?
 -do we need/want a more thorough description of virtcontainers?
 -replace the create process png with a UML flow instead (and remove from proxy section)?
 -cleanup of agent section
