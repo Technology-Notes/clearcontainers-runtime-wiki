@@ -6,6 +6,7 @@
 -replace the create process png with a UML flow instead (and remove from proxy section)?
 -cleanup of agent section
 -add crio/conmon/k8s details
+-add crio/conmon/k8s diagram for parity with Docker.
 ```
 
 * [Overview](#overview)
