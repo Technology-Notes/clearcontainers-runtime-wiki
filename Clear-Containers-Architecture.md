@@ -62,14 +62,12 @@ There is only one `cc-proxy` instance running per Clear Containers host.
 
 On the host, each container process's removal is handled by a reaper in the higher
 layers of the container stack. In the case of Docker it is handled by `containerd-shim`.
-In the case of CRI-O it is handled by `conmon`.  For clarity, we will call this
-the `container process reaper`. As Clear Containers processes run inside their
-own  virtual machines, the `container process reaper` can not monitor, control
+In the case of CRI-O it is handled by `conmon`. For clarity, for the remainder of this document the term 
+"container process reaper" will be used to refer to either reaper. As Clear Containers processes run inside their own  virtual machines, the container process reaper can not monitor, control
 or reap them. `cc-runtime` fixes that issue by creating an [additional shim process
-(`cc-shim`)](https://github.com/clearcontainers/shim) between `containerd-shim` or `conmon`
-and `cc-proxy`. A `cc-shim` instance will both forward signals and `stdin` streams
+(`cc-shim`)](https://github.com/clearcontainers/shim) between the container process reaper and `cc-proxy`. A `cc-shim` instance will both forward signals and `stdin` streams
 to the container process on the guest and pass the container `stdout` and `stderr`
-streams back up the stack to CRI-O or Docker via the `container process reaper`.
+streams back up the stack to CRI-O or Docker via the container process reaper.
 `cc-runtime` creates a `cc-shim` daemon for each container and for each OCI command
 received to run within an already running container (i.e. `docker exec`).
 
