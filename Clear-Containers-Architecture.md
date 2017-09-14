@@ -113,20 +113,20 @@ machine type.
  
 ## Agent
 
-[`agent`](https://github.com/clearcontainers/agent) is a daemon running in the
+[`cc-agent`](https://github.com/clearcontainers/agent) is a daemon running in the
 guest as a supervisor for managing containers and processes potentially running
 within those containers.
 
-The `agent` execution unit is the pod. An `agent` pod is a container sandbox defined
+The `cc-agent` execution unit is the pod. A `cc-agent` pod is a container sandbox defined
 by a set of namespaces (NS, UTS, IPC and PID). `cc-runtime` can run several containers per pod to support container engines that require multiple containers running inside a single VM. In the case of docker, `cc-runtime` creates a single container per pod.
 
-The `agent` uses a communication protocol defined by the [hyperstart](https://github.com/hyperhq/hyperstart) project. This was chosen to maintain backward compatibility with the `hyperstart` agent used in the 2.x `Clear Containers` architecture.
+`cc-agent` uses a communication protocol defined by the [hyperstart](https://github.com/hyperhq/hyperstart) project. This was chosen to maintain backward compatibility with the `hyperstart` agent used in the 2.x `Clear Containers` architecture.
 
-The `agent` interface consists of:
-- A control serial channel over which the `agent` sends and receives specific commands for controlling and managing pods and containers. Detailed information about the commands can be found at [`agent api`](https://github.com/clearcontainers/agent/tree/master/api)
-- An I/O serial channel for passing the container processes output streams (stdout, stderr) back to `cc-proxy` and receiving the input stream (stdin) for them. As all streams for all containers are going through one single serial channel, the `agent` prepends them with container specific sequence numbers. There are at most two sequence numbers per container process: one for stdout and stdin, and another one for stderr.
+The `cc-agent` interface consists of:
+- A control serial channel over which the `cc-agent` sends and receives specific commands for controlling and managing pods and containers. Detailed information about the commands can be found at [`cc-agent` API](https://github.com/clearcontainers/agent/tree/master/api)
+- An I/O serial channel for passing the container processes output streams (stdout, stderr) back to `cc-proxy` and receiving the input stream (stdin) for them. As all streams for all containers are going through one single serial channel, the `cc-agent` prepends them with container specific sequence numbers. There are at most two sequence numbers per container process: one for stdout and stdin, and another one for stderr.
 
-The `agent` supports the following commands:
+`cc-agent` supports the following commands:
 - `StartPodCmd`: Sets up a pod in a newly created VM. 
 - `NewContainerCmd`: Creates a new container within a pod. This needs to be sent after the `StartPodCmd` has been issued for starting a pod. This command also starts the container process.
 - `ExecCmd`: Executes a new process within an already running container.
@@ -155,11 +155,11 @@ Each stream message is composed of a stream sequence code and a payload containi
   │   (64 bits)    │    (64 bits)   │     (data length bytes)      │
   └────────────────┴────────────────┴──────────────────────────────┘
 ```
-- `Sequence code` is the 64 bit sequence number assigned by the `agent` for a stream.
+- `Sequence code` is the 64 bit sequence number assigned by `cc-agent` for a stream.
 - `Length` is the size of the entire stream message in bytes and encoded in network order.
 - `Payload` is the stream data.
 
-The `agent` makes use of [`libcontainer`](https://github.com/opencontainers/runc/tree/master/libcontainer) to manage the lifecycle of the container. This way the `agent` reuses most of the code used by [`runc`](https://github.com/opencontainers/runc).
+The `cc-agent` makes use of [`libcontainer`](https://github.com/opencontainers/runc/tree/master/libcontainer) to manage the lifecycle of the container. This way the `cc-agent` reuses most of the code used by [`runc`](https://github.com/opencontainers/runc).
 
 ## Runtime
 
@@ -201,7 +201,7 @@ more of them later.
 This is when all networking interfaces are created and setup inside the namespace, according to the selected
 pod networking model (CNM for Docker or CNI for Kubernetes).
 3. Create and start the virtual machine running the container process. The VM will run inside
-the host namespaces created during step 1, and its `systemd` instance will spawn the `agent` daemon.
+the host namespaces created during step 1, and its `systemd` instance will spawn the `cc-agent` daemon.
 4. Register the virtual machine with `cc-proxy`.
 5. The `cc-proxy` waits for the agent to signal that it is ready and then returns
 a token. This token uniquely identifies a process within a container inside the virtual machine.
@@ -215,7 +215,7 @@ going to monitor by passing its token through the `cc-proxy` `connectShim` comma
 ![Docker create](arch-images/create.png)
 
 At this point, the virtual machine that will run the containers workloads
-is up and running, and the [`agent`](#agent) is ready to process container
+is up and running, and the [`cc-agent`](#agent) is ready to process container
 life cycle commands. The pod inside the virtual machine is not created, and
 the containers are not running yet. This will be done through the OCI 
 [`start`](#start) command
@@ -224,7 +224,7 @@ the containers are not running yet. This will be done through the OCI
 
 With namespace containers `start` launches a traditional Linux container process
 in its own set of namespaces. With Clear Containers, the main task of `cc-runtime`
-is to ask the [`agent`](#agent) to create a pod inside the virtual machine and then
+is to ask the [`cc-agent`](#agent) to create a pod inside the virtual machine and then
 start all containers within this pod.
 In practice, this means `cc-runtime` will run through the following steps:
 
@@ -331,12 +331,12 @@ networking model (CNM or CNI) removal method.
 
 ## Proxy
 
-`cc-proxy` is a daemon offering access to the VM [`agent`](https://github.com/clearcontainers/agent)
+`cc-proxy` is a daemon offering access to the VM [`cc-agent`](https://github.com/clearcontainers/agent)
 to multiple `cc-shim` and `cc-runtime` clients.
 Only a single instance of `cc-proxy` per host is necessary as it can be used for several different VMs.
 Its main role is to:
-- Arbitrate access to the `agent` control channel between all the `cc-runtime` instances and the `cc-shim` ones.
-- Route the I/O streams and signals between the various `cc-shim` instances and the `agent`.
+- Arbitrate access to the `cc-agent` control channel between all the `cc-runtime` instances and the `cc-shim` ones.
+- Route the I/O streams and signals between the various `cc-shim` instances and the `cc-agent`.
 
 `cc-proxy` API is available through a single socket for all `cc-shim` and `cc-runtime` instances
 to connect to. `cc-proxy` can be configured to use a UNIX or a TCP socket, and by default
@@ -348,7 +348,7 @@ The protocol on the `cc-proxy` socket supports the following commands:
 - `AttachVM`: It can be used to associate clients to an already known VM. Optionally `AttachVM` senders
 can ask `cc-proxy` for a token. In the OCI `exec` command case, this token will be used by the `cc-shim`
 instance that monitors the executed process inside the container.
-- `Hyper` : This payload will forward an hyperstart command to the `agent`.
+- `Hyper` : This payload will forward an hyperstart command to the `cc-agent`.
 - `ConnectShim`: Used by `cc-shim` instances to connect to `cc-proxy` and let it know which container
 process it wants to monitor. `cc-shim` sends the token they've been given by `cc-runtime` as part of the `ConnectShim` payload. With that information, `cc-proxy` builds its I/O and signal multiplexing
 routes between the VM process containers and the host `cc-shim` instances.
@@ -368,7 +368,7 @@ With Clear Containers, `cc-shim` acts as the container process that the containe
 container process reaper decides to send to the container process.
 
 `cc-shim` has an implicit knowledge about which VM agent will handle those streams and signals and thus acts as
-an encapsulation layer between the container process reaper and the `agent`. `cc-shim`:
+an encapsulation layer between the container process reaper and the `cc-agent`. `cc-shim`:
 
 - Connects to `cc-proxy` using a token obtained by calling the `cc-proxy` `ConnectShim` command. The token is passed from `cc-runtime` to `cc-shim` when the former spawns the latter and is used to identify the true container process that the shim process will be shadowing or representing.
 - Fragments and encapsulates the standard input stream from the container process reaper into `cc-proxy` stream frames:
@@ -395,7 +395,7 @@ into an output stream that it forwards to the container process reaper.
 `Signal` frames that it sends to the container via `cc-proxy`.
 
 As an example, assuming that running the `pwd` command from a containers standard
-input will generate the output "`/tmp`" on the containers standard output. If the `agent` assigned
+input will generate the output "`/tmp`" on the containers standard output. If the `cc-agent` assigned
 to this process uses sequence number 8888 for stdin and stdout and 8889 for stderr, with `cc-shim` and Clear Containers, this example would look like:
 
 ![cc-shim](arch-images/shim.png)
