@@ -7,6 +7,7 @@
 -cleanup of agent section
 -add crio/conmon/k8s details
 -add crio/conmon/k8s diagram for parity with Docker.
+- Shim section: Example at end is still unclear.
 ```
 
 * [Overview](#overview)
@@ -359,18 +360,18 @@ For more details about `cc-proxy`'s protocol, theory of operations or debugging 
 
 ## Shim
 
-A `container process reaper` such as Docker's `containerd-shim` or crio's `conmon` is designed around the assumption that it can monitor and reap the actual
-container process. As `container process reaper` runs on the host, it can not directly monitor a process running
+A container process reaper, such as Docker's `containerd-shim` or crio's `conmon`, is designed around the assumption that it can monitor and reap the actual
+container process. As the container process reaper runs on the host, it cannot directly monitor a process running
 within a virtual machine. At most it can see the QEMU process, but that is not enough.
-With Clear Containers, `cc-shim` acts as the container process that `container process reaper` can monitor. Therefore
-`cc-shim` needs to handle all container I/O streams (`stdout`, `stdin` and `stderr`) and forward all signals
-`container process reaper` decides to send to the container process.
+With Clear Containers, `cc-shim` acts as the container process that the container process reaper can monitor. Therefore
+`cc-shim` needs to handle all container I/O streams (`stdout`, `stdin` and `stderr`) and forward all signals the
+container process reaper decides to send to the container process.
 
-`cc-shim` has an implicit knowledge about which VM agent will handle those streams and signals and thus act as
-an encapsulation layer between `container process reaper` and the `agent`:
+`cc-shim` has an implicit knowledge about which VM agent will handle those streams and signals and thus acts as
+an encapsulation layer between the container process reaper and the `agent`. `cc-shim`:
 
-- It connects to `cc-proxy` using a token with `cc-proxy` `ConnectShim` command . The token is passed from `cc-runtime` to `cc-shim` when the former spawns the latter and is used to identify the container process that the shim will be shadowing.
-- It fragments and encapsulates the standard input stream from `container process reaper` into `cc-proxy` stream frames:
+- Connects to `cc-proxy` using a token obtained by calling the `cc-proxy` `ConnectShim` command. The token is passed from `cc-runtime` to `cc-shim` when the former spawns the latter and is used to identify the true container process that the shim process will be shadowing or representing.
+- Fragments and encapsulates the standard input stream from the container process reaper into `cc-proxy` stream frames:
 ```
                      1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 3 3
 0 1 2 3 4 5 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -388,13 +389,13 @@ an encapsulation layer between `container process reaper` and the `agent`:
 │                                                           │
 └───────────────────────────────────────────────────────────┘
 ```
-- It de-encapsulates and assembles standard output and error `cc-proxy` stream frames
-into an output stream that it forwards to `container process reaper`
-- It translates all UNIX signals (except `SIGKILL` and `SIGSTOP`) into `cc-proxy`
+- De-encapsulates and assembles standard output and error `cc-proxy` stream frames
+into an output stream that it forwards to the container process reaper.
+- Translates all UNIX signals (except `SIGKILL` and `SIGSTOP`) into `cc-proxy`
 `Signal` frames that it sends to the container via `cc-proxy`.
 
-As an example, let's say that running the `pwd` command from a container standard
-input will generate `/tmp` from the container standard output. The `agent` assigned
+As an example, assuming that running the `pwd` command from a containers standard
+input will generate the output "`/tmp`" on the containers standard output. The `agent` assigned
 this specific process 8888 and 8889 respectively as the stdin, stdout and stderr
 sequence numbers. With `cc-shim` and Clear Containers, this example would look like:
 
