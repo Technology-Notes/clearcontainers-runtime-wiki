@@ -28,6 +28,7 @@
 * [Appendices](#appendices)
     * [DAX](#dax)
     * [Previous Releases](#previous-releases)
+    * [Resources](#resources)
 
 ## Overview
 
@@ -621,7 +622,7 @@ Code:
 
 - https://github.com/clearlinux-pkgs/clear-containers-docker
 
-## Further Resources
+## Resources
 
 The 2.x architecture document is available at:
 
