@@ -8,10 +8,10 @@ Also you will find information on how to install `cc-runtime` and its dependenci
 ## Other system components
 
 - Hypervisor (`qemu-lite`): https://github.com/clearcontainers/qemu
-- Guest kernel: https://github.com/clearcontainers/linux
 - Proxy process (`cc-proxy`): https://github.com/clearcontainers/proxy
 - Process shim (`cc-shim`): https://github.com/clearcontainers/shim
 - VM agent process (`cc-agent`): https://github.com/clearcontainers/agent
+- Guest kernel: https://github.com/clearcontainers/linux
 
 ## Additional related repositories
 
