@@ -32,10 +32,10 @@
 This is an architectural overview of Clear Containers, based on the 3.0 release.
 
 The [Clear Containers runtime (cc-runtime)](https://github.com/clearcontainers/runtime)
-is compatible with the [OCI](https://github.com/opencontainers) specifications
+is compatible with the [OCI](https://github.com/opencontainers) [runtime specification](https://github.com/opencontainers/runtime-spec)
 and thus works seamlessly with the
 [Docker Engine](https://www.docker.com/products/docker-engine) pluggable runtime
-architecture or the [Kubernetes Container Runtime Interface (CRI)](https://github.com/kubernetes/kubernetes/tree/master/pkg/kubelet/apis/cri/v1alpha1/runtime) through the [CRI-O](https://github.com/kubernetes-incubator/cri-o) implementation. In other words, one can transparently select between the
+architecture. It also supports the [Kubernetes Container Runtime Interface (CRI)](https://github.com/kubernetes/kubernetes/tree/master/pkg/kubelet/apis/cri/v1alpha1/runtime) through the [CRI-O](https://github.com/kubernetes-incubator/cri-o) implementation. In other words, one can transparently select between the
 [default Docker and CRI-O runtime (runc)](https://github.com/opencontainers/runc) and
 `cc-runtime`.
 
