@@ -565,13 +565,15 @@ This section provides a brief overview of architectural features enabled in
 prior and current versions of Clear Containers.
 
 ### Version 3.0
-- Moved to using cc-agent as an agent inside the VM
-- Moved to PC machine type
-- Rewrite of runtime in go, leveraging virtcontainers
+
+- Moved from hyperstart to `cc-agent` as an agent inside the VM.
+- Moved from `qemu-lite` to `pc` QEMU machine type.
+- Rewrite of runtime in go, leveraging virtcontainers.
 
 ### Version 2.1
-- Moved to using `hyperstart` as an agent inside the VM
-- Creation of `cc-shim` and ``cc-proxy`.  Major features this enables:
+
+- Introduction of `hyperstart` as an agent inside the VM.
+- Creation of `cc-shim` and `cc-proxy`.  Major features this enables:
   - Collection of workload exit codes (`cc-shim`)
   - Full support for terminal/signal control (`cc-proxy`)
 
@@ -579,12 +581,12 @@ prior and current versions of Clear Containers.
 
 - Clear Containers V2.0 is OCI compatible, and does integrate seamlessly into
 Docker 1.12 via the OCI runtime method.
-- Move from lkvm/kvmtool to QEMU for more extended functionality.
+- Move from lkvm/`kvmtool` to QEMU for more extended functionality.
 - Using nvdimm to DAX map host files into the guest.
 
 ### Version 1.0
 
-- Initial instantiation of Clear Containers
+- Initial instantiation of Clear Containers.
 - Using `lkvm/kvmtool` as VM supervisor on the host.
 - Not OCI compatible - 1.0 is a compiled replacement runtime for Docker and
 requires a different build of docker to be installed on the host system.
