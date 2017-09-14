@@ -560,7 +560,7 @@ More information about DAX can be found in the Linux Kernel
 Information on the use of nvdimm via QEMU is available in the QEMU source code
 [here](http://git.qemu-project.org/?p=qemu.git;a=blob;f=docs/nvdimm.txt;hb=HEAD)
 
-## Architectural changes by release
+## Previous Releases
 
 This section provides a brief overview of architectural features enabled in
 prior and current versions of Clear Containers.
@@ -571,24 +571,58 @@ prior and current versions of Clear Containers.
 - Moved from `qemu-lite` to `pc` QEMU machine type.
 - Rewrite of runtime in go, leveraging virtcontainers.
 
+### Version 2.2
+
+Summary:
+
+- Support for devicemapper storage.
+
+Further details:
+
+- https://github.com/01org/cc-oci-runtime/releases/tag/2.2.0
+
 ### Version 2.1
+
+Summary:
 
 - Introduction of `hyperstart` as an agent inside the VM.
 - Creation of `cc-shim` and `cc-proxy`.  Major features this enables:
   - Collection of workload exit codes (`cc-shim`)
   - Full support for terminal/signal control (`cc-proxy`)
 
+Further details:
+
+- https://github.com/01org/cc-oci-runtime/releases/tag/2.1.0
+
 ### Version 2.0
 
-- Clear Containers V2.0 is OCI compatible, and does integrate seamlessly into
+Summary:
+
+- Clear Containers V2.0 is OCI compatible, and integrates seamlessly into
 Docker 1.12 via the OCI runtime method.
-- Move from lkvm/`kvmtool` to QEMU for more extended functionality.
-- Using nvdimm to DAX map host files into the guest.
+- Moved from `lkvm/kvmtool` to QEMU for more extended functionality.
+- Used nvdimm to DAX map host files into the guest.
+
+Code:
+
+- https://github.com/01org/cc-oci-runtime/releases/tag/2.0.0
 
 ### Version 1.0
 
+Summary:
+
 - Initial instantiation of Clear Containers.
 - Using `lkvm/kvmtool` as VM supervisor on the host.
-- Not OCI compatible - 1.0 is a compiled replacement runtime for Docker and
-requires a different build of docker to be installed on the host system.
-- Utilises a virtual PCI device to DAX map host files into the guest.
+- Not OCI compatible - 1.0 is a compiled replacement runtime for Docker (an "execution driver") and
+required a different build of docker to be installed on the host system.
+- Utilised a virtual PCI device to DAX map host files into the guest.
+
+Code:
+
+- https://github.com/clearlinux-pkgs/clear-containers-docker
+
+## Further Resources
+
+The 2.x architecture document is available at:
+
+- https://github.com/01org/cc-oci-runtime/blob/master/documentation/architecture.md
