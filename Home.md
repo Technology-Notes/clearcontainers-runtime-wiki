@@ -11,7 +11,7 @@ Also you will find information on how to install `cc-runtime` and its dependenci
 - Guest kernel: https://github.com/clearcontainers/linux
 - Proxy process (`cc-proxy`): https://github.com/clearcontainers/proxy
 - Process shim (`cc-shim`): https://github.com/clearcontainers/shim
-- VM agent: https://github.com/clearcontainers/hyperstart
+- VM agent process (`cc-agent`): https://github.com/clearcontainers/agent
 
 ## Additional related repositories
 
