@@ -117,22 +117,22 @@ guest as a supervisor for managing containers and processes potentially running
 within those containers.
 
 The `agent` execution unit is the pod. An `agent` pod is a container sandbox defined
-by a set of namespaces (NS, UTS, IPC and PID). `cc-runtime` can run several containers per pod to support container engines that require multiple containers running inside a single VM. In case of docker, `cc-runtime` runs a single container per pod.
+by a set of namespaces (NS, UTS, IPC and PID). `cc-runtime` can run several containers per pod to support container engines that require multiple containers running inside a single VM. In the case of docker, `cc-runtime` creates a single container per pod.
 
-The `agent` uses a communication protocol defined by the [hyperstart](https://github.com/hyperhq/hyperstart) project. This was done to maintain backward compatibility with the `hyperstart` agent used in 2.1 version of `Clear Containers`.
+The `agent` uses a communication protocol defined by the [hyperstart](https://github.com/hyperhq/hyperstart) project. This was chosen to maintain backward compatibility with the `hyperstart` agent used in the 2.x `Clear Containers` architecture.
 
 The `agent` interface consists of:
 - A control serial channel over which the `agent` sends and receives specific commands for controlling and managing pods and containers. Detailed information about the commands can be found at [`agent api`](https://github.com/clearcontainers/agent/tree/master/api)
-- An I/O serial channel for passing the container processes output streams (stdout, stderr) back to cc-proxy and receiving the input stream (stdin) for them. As all streams for all containers are going through one single serial channel, hyperstart prepends them with container specific sequence numbers. There are at most 2 sequence numbers per container process, one for stdout and stdin, and another one for stderr.
+- An I/O serial channel for passing the container processes output streams (stdout, stderr) back to `cc-proxy` and receiving the input stream (stdin) for them. As all streams for all containers are going through one single serial channel, the `agent` prepends them with container specific sequence numbers. There are at most two sequence numbers per container process: one for stdout and stdin, and another one for stderr.
 
 The `agent` supports the following commands:
 - `StartPodCmd`: Sets up a pod in a newly created VM. 
-- `NewContainerCmd`: Creates a new container within a pod. This needs to be sent after the StartPodCmd has been issued for starting a pod. This starts the container process as well.
+- `NewContainerCmd`: Creates a new container within a pod. This needs to be sent after the `StartPodCmd` has been issued for starting a pod. This command also starts the container process.
 - `ExecCmd`: Executes a new process within an already running container.
 - `KillContainerCmd`: `cc-shim` uses this to send signals to a container process.
 - `WinsizeCmd`: `cc-shim` uses this to change terminal size of the terminal associated with a container.
-- `RemoveContainerCmd`: Removes a container from the pod. This command will fail for a container in running state.
-- `Destroypod`: Removes all containers within a pod . All containers need to be in stopped state for this command to succeed. Frees resources associated with the pod.
+- `RemoveContainerCmd`: Removes a container from the pod. This command will fail if the container is in a running state.
+- `Destroypod`: Removes all containers within a pod . All containers need to be in a stopped state for this command to succeed. The command also frees resources associated with the pod.
 
 Each control message is composed of a command code and a payload required for the command:
 
@@ -143,7 +143,7 @@ Each control message is composed of a command code and a payload required for th
   └────────────────┴────────────────┴──────────────────────────────┘
 ```
 - `Command Code` is the predefined id associated with a command.
-- `Length` is the size of the entire message in byes and encoded in network order.
+- `Length` is the size of the entire message in bytes and encoded in network order.
 - `Payload` is the JSON-encoded command request or response data.
 
 Each stream message is composed of a stream sequence code and a payload containing the stream data.
