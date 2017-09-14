@@ -15,7 +15,10 @@ Also you will find information on how to install `cc-runtime` and its dependenci
 
 ## Additional related repositories
 
-- O/S builder (for building guest images): https://github.com/clearcontainers/osbuilder
+- O/S builder: https://github.com/clearcontainers/osbuilder
+
+  Creates a "mini O/S" image which is required by the hypervisor which boots it before switching to the workload.
+
 - Test repository: https://github.com/clearcontainers/tests
 - Packaging files: https://github.com/clearcontainers/packaging
 
