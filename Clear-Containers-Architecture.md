@@ -94,18 +94,18 @@ version called [`qemu-lite`](https://github.com/01org/qemu-lite/tree/qemu-2.7-li
 Clear Containers supports various machine types, including `pc`, `pc-lite` and `q35`.
 Clear Containers defaults to using the `pc` machine type. In the past
 `pc-lite` was utilized which provided the following improvements:
-- Removing many of the legacy hardware devices support so that the guest kernel
+- Removed many of the legacy hardware devices support so that the guest kernel
 does not waste time initializing devices of no use for containers.
-- Skipping the guest BIOS/firmware and jumping straight to the Clear Containers
+- Skipped the guest BIOS/firmware and jumped straight to the Clear Containers
 kernel.
 
 In order to provide some advanced features which were lacking in `pc-lite` like hotplug
-support we moved from to `pc`.
+support, the default was changed to `pc`.
 
 In the future Clear Containers plan to move to v2.9 version of qemu,
-available at our Clear Containers [QEMU repo](https://github.com/clearcontainers/qemu/tree/qemu-lite-v2.9.0).
-This transition has been delayed to post Clear Containers 3.0 release since there
-were regressions introduced, as described in
+available at 
+the [Clear Containers QEMU repo](https://github.com/clearcontainers/qemu/tree/qemu-lite-v2.9.0).
+This transition has been delayed until after the release of Clear Containers 3.0 due to regressions, as described in
 [runtime issue 407](https://github.com/clearcontainers/runtime/issues/407).  Once support for
 features like hotplug are available in `Q35`, the project will look to transition to this
 machine type.
