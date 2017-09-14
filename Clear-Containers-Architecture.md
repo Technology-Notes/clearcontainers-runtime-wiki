@@ -7,7 +7,6 @@
 -cleanup of agent section
 -add crio/conmon/k8s details
 -add crio/conmon/k8s diagram for parity with Docker.
-- Shim section: Example at end is still unclear.
 ```
 
 * [Overview](#overview)
@@ -395,9 +394,8 @@ into an output stream that it forwards to the container process reaper.
 `Signal` frames that it sends to the container via `cc-proxy`.
 
 As an example, assuming that running the `pwd` command from a containers standard
-input will generate the output "`/tmp`" on the containers standard output. The `agent` assigned
-this specific process 8888 and 8889 respectively as the stdin, stdout and stderr
-sequence numbers. With `cc-shim` and Clear Containers, this example would look like:
+input will generate the output "`/tmp`" on the containers standard output. If the `agent` assigned
+to this process uses sequence number 8888 for stdin and stdout and 8889 for stderr, with `cc-shim` and Clear Containers, this example would look like:
 
 ![cc-shim](arch-images/shim.png)
 
