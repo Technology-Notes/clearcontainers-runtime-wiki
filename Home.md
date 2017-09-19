@@ -1,7 +1,8 @@
 Welcome to the [Next Generation Intel® Clear Containers runtime](https://github.com/clearcontainers/runtime) wiki!
 
-This page will contain information to help you understand and use `cc-runtime`.
-Also you will find information on how to install `cc-runtime` and its dependencies to launch Clear Containers 3.0.
+This wiki contains information to help you understand and use `cc-runtime` and its associated components.
+
+Whilst the [main repository](/clearcontainers/runtime) contains a lot of [documentation](/clearcontainers/runtime/tree/master/docs), this wiki collects together useful information that may change frequently so is more appropriate to store here.
 
 ## Quickstart
 
