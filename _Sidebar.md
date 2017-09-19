@@ -6,6 +6,8 @@
 
 * [Architecture](/clearcontainers/runtime/blob/master/docs/architecture/architecture.md)
 
+* [Kubernetes](/clearcontainers/runtime/wiki/Clear-Containers-and-Kubernetes)
+
 * [Current Limitations](/clearcontainers/runtime/wiki/Current-Limitations)
 
 **Development**
