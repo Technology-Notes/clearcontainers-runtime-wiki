@@ -5,6 +5,7 @@
   * [Ubuntu](/clearcontainers/runtime/wiki/Installing-Clear-Containers-3.0-on-Ubuntu)
 
 * [Current Limitations](/clearcontainers/runtime/wiki/Current-Limitations)
+* [Architecture](https://github.com/clearcontainers/runtime/blob/master/docs/architecture/architecture.md)
 
 **Development**
 * [[Release Process]]
