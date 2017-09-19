@@ -12,3 +12,4 @@
 * [Contributing](/clearcontainers/runtime/blob/master/CONTRIBUTING.md)
 * [[Release Process]]
 * [[Release Checklist]]
+* [PR Review HOWTO](https://github.com/01org/cc-oci-runtime/wiki/PR-Review-HOWTO)
