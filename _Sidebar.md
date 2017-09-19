@@ -16,6 +16,7 @@
 * [Contributing](/clearcontainers/runtime/blob/master/CONTRIBUTING.md)
   * [Code of Conduct](/clearcontainers/runtime/blob/master/CODE_OF_CONDUCT.md)
 * [[Debugging]]
+* [[Running standalone]]
 
 **Process**
 * [[Release Process]]
