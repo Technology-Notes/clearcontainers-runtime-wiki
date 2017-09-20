@@ -10,7 +10,7 @@ Whilst the [main repository](/clearcontainers/runtime) contains a lot of [docume
 
 ## System components
 
-- Rntime (`cc-runtime`): https://github.com/clearcontainers/runtime
+- Runtime (`cc-runtime`): https://github.com/clearcontainers/runtime
 - Hypervisor (`qemu-lite`): https://github.com/clearcontainers/qemu
 - Proxy process (`cc-proxy`): https://github.com/clearcontainers/proxy
 - Process shim (`cc-shim`): https://github.com/clearcontainers/shim
@@ -29,6 +29,8 @@ Whilst the [main repository](/clearcontainers/runtime) contains a lot of [docume
 ## Clear Containers with Kubernetes
 
 - Early preview of Clear Containers running with Kubernetes: https://github.com/clearcontainers/runtime/wiki/Clear-Containers-and-Kubernetes
+
+[![asciicast](https://asciinema.org/a/134681.png)](https://asciinema.org/a/134681)
 
 ## External Links
 
