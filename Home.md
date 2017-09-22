@@ -25,6 +25,7 @@ Whilst the [main repository](/clearcontainers/runtime) contains a lot of [docume
 
 - Test repository: https://github.com/clearcontainers/tests
 - Packaging files: https://github.com/clearcontainers/packaging
+- Jenkins CI configuration: https://github.com/clearcontainers/jenkins
 
 ## Clear Containers with Kubernetes
 
