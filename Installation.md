@@ -1,3 +1,4 @@
 * [CentOS installation](https://github.com/clearcontainers/runtime/wiki/Installing-Clear-Containers-3.0-on-CentOS)
+* [Clear Linux installation](https://github.com/clearcontainers/runtime/wiki/Installing-Clear-Containers-3.0-on-Clear-Linux)
 * [Fedora installation](https://github.com/clearcontainers/runtime/wiki/Installing-Clear-Containers-3.0-on-Fedora)
 * [Ubuntu installation](https://github.com/clearcontainers/runtime/wiki/Installing-Clear-Containers-3.0-on-Ubuntu)
