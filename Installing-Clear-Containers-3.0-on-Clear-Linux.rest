@@ -1,0 +1,3 @@
+Please follow the instructions here:
+
+- `Installing Clear Containers 3.0 on Clear Linux <https://github.com/clearcontainers/runtime/blob/master/docs/clearlinux-installation-guide.md>`_
