@@ -5,7 +5,7 @@
   * [Fedora](/clearcontainers/runtime/wiki/Installing-Clear-Containers-3.0-on-Fedora)
   * [Ubuntu](/clearcontainers/runtime/wiki/Installing-Clear-Containers-3.0-on-Ubuntu)
 
-* [Uprading](/clearcontainers/runtime/blob/master/docs/upgrading.md)
+* [Upgrading](/clearcontainers/runtime/blob/master/docs/upgrading.md)
 
 * [Architecture](/clearcontainers/runtime/blob/master/docs/architecture/architecture.md)
 
