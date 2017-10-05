@@ -7,6 +7,8 @@
 
 * [Upgrading](/clearcontainers/runtime/blob/master/docs/upgrading.md)
 
+* [Stale-containers](/clearcontainers/runtime/wiki/Stale-containers)
+
 * [Architecture](/clearcontainers/runtime/blob/master/docs/architecture/architecture.md)
 
 * [Kubernetes](/clearcontainers/runtime/wiki/Clear-Containers-and-Kubernetes)
