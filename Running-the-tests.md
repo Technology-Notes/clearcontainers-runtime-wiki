@@ -1,6 +1,6 @@
 The runtime comes with a comprehensive set of unit-tests (`*_test.go`). However, there are many other classes of tests which are stored in a separate [tests repository](https://github.com/clearcontainers/tests).
 
-It is possible to run *all* the tests very easily, however **please** see the warning below **BEFORE** you run the commands below:
+If you wish to run *all* the tests (as the CI system does), it is very easy. However, **please** see the warning below **BEFORE** you run these commands:
 
 ```
 $ go get -d github.com/clearcontainers/runtime
