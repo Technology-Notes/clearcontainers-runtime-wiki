@@ -20,6 +20,7 @@
   * [Code of Conduct](/clearcontainers/runtime/blob/master/CODE_OF_CONDUCT.md)
 * [[Debugging]]
 * [[Running standalone]]
+* [[Running the tests]]
 
 **Process**
 * [[Release Process]]
