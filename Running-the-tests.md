@@ -10,4 +10,4 @@ The commands above will perform all setup (including cloning the `tests` reposit
 
 :warning: **WARNING:** :warning:
 
-- It is not advisable to run the above on a system you care about since the tests are aggressive and run as the `root` user. If you still wish to run the entire suite of tests, the best advice is to run them inside a virtual machine, or on a non-essential system.
+- **It is NOT advisable to run the above on a system you care about** since the tests are aggressive and run as the `root` user. If you still wish to run the entire suite of tests, the best advice is to run them inside a virtual machine, or on a non-essential system.
