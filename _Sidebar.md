@@ -7,6 +7,8 @@
 
 * [Upgrading](/clearcontainers/runtime/blob/master/docs/upgrading.md)
 
+* [Updating assets](/clearcontainers/runtime/blob/master/docs/assets-update.md)
+
 * [Stale-containers](/clearcontainers/runtime/wiki/Stale-containers)
 
 * [Architecture](/clearcontainers/runtime/blob/master/docs/architecture/architecture.md)
