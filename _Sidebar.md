@@ -27,4 +27,4 @@
 **Process**
 * [[Release Process]]
 * [[Release Checklist]]
-* [PR Review HOWTO](https://github.com/01org/cc-oci-runtime/wiki/PR-Review-HOWTO)
+* [PR Review HOWTO](/clearcontainers/runtime/wiki/PR-Review-HOWTO)
