@@ -7,14 +7,19 @@ ___
 
 If you are new to Clear Containers, try working through the following tasks. They should help you to become familiar with the system.
 
+# Preliminaries
+
+- Read the project's [README](https://github.com/clearcontainers/runtime/blob/master/README.md) carefully.
+- Read the [architecture document](https://github.com/clearcontainers/runtime/blob/master/docs/architecture/architecture.md) for a technical overview and details of the system components.
+
 # Basics
 
 ## Create a Clear Container
 
 1. [[Install|installation]] Clear Containers.
 1. Check that Clear Containers has installed, and is available in `docker` (hint: `docker info`).
-1. Create a Clear Container (hint: covered in the installation guides).
-1. Prove that you are running a Clear Container (hint: `uname -r`).
+1. Create a Clear Container (hint: `docker run` as normal! :)
+1. Prove that you are running a Clear Container (hints: `uname -r` and `ps aux | grep qemu`).
 
 ## Environment
 
