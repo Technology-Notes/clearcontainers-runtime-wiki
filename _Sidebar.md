@@ -1,4 +1,5 @@
 **Usage**
+* [[Newbie]]
 * [[Installation]]
   * [CentOS](/clearcontainers/runtime/wiki/Installing-Clear-Containers-3.0-on-CentOS)
   * [Clear Linux](/clearcontainers/runtime/wiki/Installing-Clear-Containers-3.0-on-Clear-Linux)
