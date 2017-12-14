@@ -40,6 +40,10 @@ If you are new to Clear Containers, try working through the following tasks. The
 
 # Advanced
 
+Note:
+
+This section assumes you have read the [architecture document](https://github.com/clearcontainers/runtime/blob/master/docs/architecture/architecture.md).
+
 1. Create a new `rootfs` image using [osbuilder](https://github.com/clearcontainers/osbuilder).
 1. Read the [osbuilder](https://github.com/clearcontainers/osbuilder) docs to establish how to modify your runtime configuration to use the new `rootfs` image.
 1. Start a Clear Container using your new `rootfs` image.
