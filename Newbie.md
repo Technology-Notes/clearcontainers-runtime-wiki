@@ -12,9 +12,9 @@ If you are new to Clear Containers, try working through the following tasks. The
 ## Create a Clear Container
 
 1. [[Install|installation]] Clear Containers.
-1. Check that Clear Containers has installed, and is available in `docker`.
-1. Create a Clear Container.
-1. Prove that you are running a Clear Container.
+1. Check that Clear Containers has installed, and is available in `docker` (hint: `docker info`).
+1. Create a Clear Container (hint: covered in the installation guides).
+1. Prove that you are running a Clear Container (hint: `uname -r`).
 
 ## Environment
 
