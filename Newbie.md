@@ -1,3 +1,10 @@
+* [Basics](#basics)
+  * [Create a Clear Container](#create-a-clear-container)
+  * [Environment](#environment)
+* [Intermediate](#intermediate)
+* [Advanced](#advanced)
+___
+
 If you are new to Clear Containers, try working through the following tasks. They should help you to become familiar with the system.
 
 # Basics
