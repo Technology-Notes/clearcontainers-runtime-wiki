@@ -1,3 +1,21 @@
+* [High level considerations](#high-level-considerations)
+    * [Security](#security)
+    * [Reliability](#reliability)
+    * [Performance](#performance)
+    * [Maintenance](#maintenance)
+    * [Usability](#usability)
+* [Specifics to consider](#specifics-to-consider)
+    * [Basics](#basics)
+    * [Layout and formatting](#layout-and-formatting)
+    * [Design](#design)
+    * [Documentation](#documentation)
+    * [Logging and Debugging](#logging-and-debugging)
+    * [Testing](#testing)
+    * [Environments](#environments)
+    * [Upgrades](#upgrades)
+* [Mandatory Checks](#mandatory-checks)
+---                                       
+
 This document attempts to capture some of the points to consider when reviewing a PR to ensure code quality is kept as high as possible.
 
 ## High level considerations
