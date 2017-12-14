@@ -1,4 +1,4 @@
-If you are new to Clear Containers, try working through the following tasks. They should help you to become familiar with the system:
+If you are new to Clear Containers, try working through the following tasks. They should help you to become familiar with the system.
 
 # Basics
 
