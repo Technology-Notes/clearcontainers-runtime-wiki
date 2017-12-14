@@ -8,6 +8,7 @@
     * [Basics](#basics)
     * [Layout and formatting](#layout-and-formatting)
     * [Design](#design)
+    * [Code comments](#code-comments)
     * [Documentation](#documentation)
     * [Logging and Debugging](#logging-and-debugging)
     * [Testing](#testing)
@@ -70,13 +71,25 @@ This document attempts to capture some of the points to consider when reviewing 
 - Does the code make sense?
   - Could someone with minimal exposure to the codebase guess at what it is doing? (hint: they should be able to).
 
+### Code comments
+
+- Is the code sufficiently well commented?
+- Are all functions and function parameters documented (or for `golang` programs, is they purpose obvious?)
+- Does this change require an update to the `README`(s) / architecture docs?
+- Are any lines commented out? If so, they should be **removed**!
+- Are there any `FIXME`/`TODO`'s? If so, they should be replaced by a full URL to an issue number tracking the work that needs to be done.
+
 ### Documentation
 
-- Does this change require an update to the `README`(s) / architecture docs?
-- Is the code sufficiently well commented?
-- Are all functions documented (or for `go` are they purpose obvious?)
-- Does the document update need to be applied to any other documents
-  (for example, when a PR updates an installation guide, those same changes may need to be applied to one or more of the other installation guides!)
+- Does the document update need to be applied to any **other** documents?
+  For example, when a PR updates an installation guide, those same changes may need to be applied to one or more of the other installation guides!
+
+- Does the PR make any of the following changes? If so, it may well need a documentation change:
+  - new programs / scripts added or removed.
+  - new program / script options added / removed.
+  - new config options added or removed.
+  - new features added / removed.
+  - existing bug(s) fixed.
 
 ### Logging and Debugging
 
