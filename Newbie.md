@@ -34,9 +34,11 @@ If you are new to Clear Containers, try working through the following tasks. The
 # Intermediate
 
 1. [Enable debugging](https://github.com/clearcontainers/runtime#debugging).
-1. Find a way to force an error.
+1. Find a way to force an error
+   (hint: Try adding spurious data into the config file).
 1. Ensure you get a useful error message returned to you.
-1. See if you can find evidence of the error you forced [in the logs](https://github.com/clearcontainers/runtime#logging).
+1. See if you can find evidence of the error you forced [in the logs]
+   (https://github.com/clearcontainers/runtime#logging).
 
 # Advanced
 
