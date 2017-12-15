@@ -42,7 +42,7 @@ If you are new to Clear Containers, try working through the following tasks. The
 
 # :racing_car: Advanced
 
-Note:
+:information_source: Note:
 
 This section assumes you have read the [architecture document](https://github.com/clearcontainers/runtime/blob/master/docs/architecture/architecture.md).
 
