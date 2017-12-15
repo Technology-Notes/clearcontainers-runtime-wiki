@@ -2,7 +2,7 @@
   * [Create a Clear Container](#create-a-clear-container)
   * [Environment](#environment)
 * :biking_man: [Intermediate](#intermediate)
-* :car: [Advanced](#advanced)
+* :racing_car:  [Advanced](#advanced)
 ___
 
 If you are new to Clear Containers, try working through the following tasks. They should help you to become familiar with the system.
@@ -40,7 +40,7 @@ If you are new to Clear Containers, try working through the following tasks. The
 1. See if you can find evidence of the error you forced [in the logs]
    (https://github.com/clearcontainers/runtime#logging).
 
-# :car: Advanced
+# :racing_car: Advanced
 
 Note:
 
