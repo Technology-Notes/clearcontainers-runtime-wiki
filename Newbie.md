@@ -46,6 +46,8 @@ Note:
 
 This section assumes you have read the [architecture document](https://github.com/clearcontainers/runtime/blob/master/docs/architecture/architecture.md).
 
+Clear Containers uses a small root filesystem (`rootfs`) image (which can be based on any Linux distro) and a guest kernel image to boot the virtual machine. If you wish, you can generate your own custom `rootfs` and / or custom `kernel`. This exercise gets you to create a custom `rootfs` image and boot a Clear Container using it.
+
 1. Create a new `rootfs` image using [osbuilder](https://github.com/clearcontainers/osbuilder).
 1. Read the [osbuilder](https://github.com/clearcontainers/osbuilder) docs to establish how to modify your runtime configuration to use the new `rootfs` image.
 1. Start a Clear Container using your new `rootfs` image.
