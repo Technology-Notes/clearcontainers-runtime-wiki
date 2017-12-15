@@ -1,8 +1,8 @@
-* [Basics](#basics)
+* :baby_symbol: [Basics](#basics)
   * [Create a Clear Container](#create-a-clear-container)
   * [Environment](#environment)
-* [Intermediate](#intermediate)
-* [Advanced](#advanced)
+* :biking_man: [Intermediate](#intermediate)
+* :car: [Advanced](#advanced)
 ___
 
 If you are new to Clear Containers, try working through the following tasks. They should help you to become familiar with the system.
@@ -12,7 +12,7 @@ If you are new to Clear Containers, try working through the following tasks. The
 - Read the project's [README](https://github.com/clearcontainers/runtime/blob/master/README.md) carefully.
 - Read the [architecture document](https://github.com/clearcontainers/runtime/blob/master/docs/architecture/architecture.md) for a technical overview and details of the system components.
 
-# Basics
+# :baby_symbol: Basics
 
 ## Create a Clear Container
 
@@ -31,7 +31,7 @@ If you are new to Clear Containers, try working through the following tasks. The
 
    (see https://github.com/clearcontainers/runtime#configuration).
 
-# Intermediate
+# :biking_man: Intermediate
 
 1. [Enable debugging](https://github.com/clearcontainers/runtime#debugging).
 1. Find a way to force an error
@@ -40,7 +40,7 @@ If you are new to Clear Containers, try working through the following tasks. The
 1. See if you can find evidence of the error you forced [in the logs]
    (https://github.com/clearcontainers/runtime#logging).
 
-# Advanced
+# :car: Advanced
 
 Note:
 
