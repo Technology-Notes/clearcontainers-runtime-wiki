@@ -5,6 +5,7 @@
   * [Clear Linux](/clearcontainers/runtime/wiki/Installing-Clear-Containers-3.0-on-Clear-Linux)
   * [Fedora](/clearcontainers/runtime/wiki/Installing-Clear-Containers-3.0-on-Fedora)
   * [Ubuntu](/clearcontainers/runtime/wiki/Installing-Clear-Containers-3.0-on-Ubuntu)
+  * [SLES](/clearcontainers/runtime/wiki/Installing-Clear-Containers-3.0-on-SLES)
 
 * [Upgrading](/clearcontainers/runtime/blob/master/docs/upgrading.md)
 
