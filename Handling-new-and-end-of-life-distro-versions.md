@@ -1,6 +1,6 @@
 # Terms
 
-- EOL - end-of-life
+- EOL - end-of-life.
 - OBS - SuSE's [Open Build Service](https://build.opensuse.org/).
 - `$version` - refers to the particular distro version the section applies to. `${version}+1` refers to the next version and `${version}-1` refers to the previous version.
 
