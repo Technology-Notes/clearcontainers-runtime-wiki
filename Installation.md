@@ -3,3 +3,4 @@
 * [Fedora installation](https://github.com/clearcontainers/runtime/wiki/Installing-Clear-Containers-3.0-on-Fedora)
 * [SLES installation](https://github.com/clearcontainers/runtime/wiki/Installing-Clear-Containers-3.0-on-SLES)
 * [Ubuntu installation](https://github.com/clearcontainers/runtime/wiki/Installing-Clear-Containers-3.0-on-Ubuntu)
+* [BC-Linux installation](https://github.com/clearcontainers/runtime/wiki/Installing-Clear-Containers-3.0-on-BC-Linux)
