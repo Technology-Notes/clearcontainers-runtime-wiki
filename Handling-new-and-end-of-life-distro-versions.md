@@ -35,7 +35,7 @@ Note: the task below should be performed **in the order listed**.
 - [ ] Raise a [packaging issue](https://github.com/clearcontainers/packaging/issues/new) for new OBS packages to be created.
 - [ ] Raise a [test issue](https://github.com/clearcontainers/tests/issues/new) to test distro upgrading:
   - For EOL versions, test upgrading from `${version}` to `${version}+1`.
-  - For new vesrions, test upgrading from `${version}-1` to `${version}`.
+  - For new versions, test upgrading from `${version}-1` to `${version}`.
   - In both cases, ensure it is still possible to create a Clear Container and that tests pass.
 - [ ] Review the following documents to see if any changes need to be made:
   - [ ] [Upgrade guide](https://github.com/clearcontainers/runtime/blob/master/docs/upgrading.md).
