@@ -31,3 +31,4 @@
 * [[Release Process]]
 * [[Release Checklist]]
 * [PR Review HOWTO](/clearcontainers/runtime/wiki/PR-Review-HOWTO)
+* [[Handling new and end of life distro versions]]
