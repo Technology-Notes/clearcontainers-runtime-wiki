@@ -10,7 +10,7 @@ This page captures the required process which should be triggered when either a 
 
 # Detecting version changes
 
-Currently manual.
+Currently manual - see https://github.com/clearcontainers/tests/issues/857.
 
 NOTE: We need an automated notification for new versions and EOL versions (ideally *before* the event!)
 
