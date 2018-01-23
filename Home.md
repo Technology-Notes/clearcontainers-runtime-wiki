@@ -37,7 +37,7 @@ Whilst the [main repository](/clearcontainers/runtime) contains a lot of [docume
 
 - Clear Containers project page:
 
-  https://clearlinux.org/clear-containers
+  https://clearlinux.org/containers
 
 ## Previous generation runtime
 
