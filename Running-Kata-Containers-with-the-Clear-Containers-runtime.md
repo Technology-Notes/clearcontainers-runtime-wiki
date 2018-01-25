@@ -72,7 +72,7 @@ script -fec 'sudo -E GOPATH=$GOPATH ./rootfs.sh clearlinux'
 
 ```
 sudo install -o root -g root -m 0755 -t rootfs/bin ../../agent/kata-agent
-sudo install -o root -g root -m 0444 ../../agent/kata-containers.target rootfs/usr/lib/systemd/system/
+sudo install -o root -g root -m 0444 ../../agent/kata-agent.service rootfs/usr/lib/systemd/system/
 sudo install -o root -g root -m 0444 ../../agent/kata-containers.target rootfs/usr/lib/systemd/system/
 ```
 
