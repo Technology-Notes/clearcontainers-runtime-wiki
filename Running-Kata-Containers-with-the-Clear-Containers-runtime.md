@@ -105,6 +105,8 @@ sudo ln -s /usr/share/clear-containers/vmlinuz.container /usr/share/kata-contain
 
 ```
 sudo sed -i 's!^\(ExecStart=[^$].*$\)!\1 --add-runtime kata-runtime=/usr/local/bin/kata-runtime!g' /etc/systemd/system/docker.service.d/clear-containers.conf
+sudo systemctl daemon-reload
+sudo systemctl restart docker
 ```
 
 # Test
