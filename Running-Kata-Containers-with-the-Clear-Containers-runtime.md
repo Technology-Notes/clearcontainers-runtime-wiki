@@ -36,7 +36,8 @@ cd $GOPATH/src/github.com/kata-containers/shim && make && sudo make install
 
 ```
 go get -d github.com/clearcontainers/runtime
-cd $GOPATH/src/github.com/clearcontainers/runtime && make build-kata-system && sudo make install-kata-system
+cd $GOPATH/src/github.com/clearcontainers/runtime
+make build-kata-system && sudo -E PATH=$PATH make install-kata-system
 ```
 
 # Enable full debug
