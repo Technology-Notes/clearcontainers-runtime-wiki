@@ -65,7 +65,7 @@ go get -d github.com/kata-containers/osbuilder
 
 ```
 cd $GOPATH/src/github.com/kata-containers/osbuilder/rootfs-builder
-script -fec 'sudo -E GOPATH=$GOPATH ./rootfs.sh clearlinux USE_DOCKER=true'
+script -fec 'sudo -E GOPATH=$GOPATH ./rootfs.sh clearlinux'
 ```
 
 ## Add the agent to the image
