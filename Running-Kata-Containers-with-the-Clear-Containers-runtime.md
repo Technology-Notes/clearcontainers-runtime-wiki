@@ -65,8 +65,12 @@ go get -d github.com/kata-containers/osbuilder
 
 ```
 cd $GOPATH/src/github.com/kata-containers/osbuilder/rootfs-builder
-script -fec 'sudo -E GOPATH=$GOPATH ./rootfs.sh clearlinux'
+script -fec 'sudo -E GOPATH=$GOPATH USE_DOCKER=true ./rootfs.sh clearlinux'
 ```
+
+**Note:**
+
+- You must ensure that the *default Docker runtime* is `runc` to make use of the `USE_DOCKER` variable. If that is not the case, simply remove the variable from the command above.
 
 ## Add the agent to the image
 
@@ -80,8 +84,13 @@ sudo install -o root -g root -m 0444 ../../agent/kata-containers.target rootfs/u
 
 ```
 cd $GOPATH/src/github.com/kata-containers/osbuilder/image-builder
-script -fec 'sudo ./image_builder.sh ../rootfs-builder/rootfs'
+script -fec 'sudo -E USE_DOCKER=true ./image_builder.sh ../rootfs-builder/rootfs'
 ```
+
+**Note:**
+
+- You must ensure that the *default Docker runtime* is `runc` to make use of the `USE_DOCKER` variable. If that is not the case, simply remove the variable from the command above.
+
 
 # Install the image
 
