@@ -28,48 +28,48 @@ We are going to describe how to deploy a bare metal Kubernetes cluster that uses
 
 # Base OS
 
-Ubuntu 16.04 4.10.0-27-generic
+Ubuntu 16.04 LTS
 
-# Known working versions
+# Known working versions:
 
 ## CNI Plugins
-github.com/containernetworking/plugins: commit 7f98c94613021d8b57acfa1a2f0c8d0f6fd7ae5a 
-(HEAD of master at the time of this editing)
+github.com/containernetworking/plugins: v0.7.0 
+
 
 ## runc
-github.com/opencontainers/runc: commit 84a082bfef6f932de921437815355186db37aeb1 
-(v1.0.0-rc4 should be fine)
+github.com/opencontainers/runc: v1.0.0-rc4
 
-## kubelet, kubeadm, kubectl: Kubernetes v1.7.8
+## kubelet, kubeadm, kubectl: 1.9.2
 ```
 $kubelet --version
-Kubernetes v1.7.8
+Kubernetes v1.9.2
 
 $kubectl version 
-Client Version: version.Info{Major:"1", Minor:"7", GitVersion:"v1.7.8", GitCommit:"bc6162cc70b4a39a7f39391564e0dd0be60b39e9", GitTreeState:"clean", BuildDate:"2017-10-05T06:54:19Z", GoVersion:"go1.8.3", Compiler:"gc", Platform:"linux/amd64"}
+Client Version: version.Info{Major:"1", Minor:"9", GitVersion:"v1.9.2", GitCommit:"5fa2db2bd46ac79e5e00a4e6ed24191080aa463b", GitTreeState:"clean", BuildDate:"2018-01-18T10:09:24Z", GoVersion:"go1.9.2", Compiler:"gc", Platform:"linux/amd64"}
+
 $ kubeadm version
-kubeadm version: &version.Info{Major:"1", Minor:"7", GitVersion:"v1.7.8", GitCommit:"bc6162cc70b4a39a7f39391564e0dd0be60b39e9", GitTreeState:"clean", BuildDate:"2017-10-05T06:35:40Z", GoVersion:"go1.8.3", Compiler:"gc", Platform:"linux/amd64"}
+kubeadm version: &version.Info{Major:"1", Minor:"9", GitVersion:"v1.9.2", GitCommit:"5fa2db2bd46ac79e5e00a4e6ed24191080aa463b", GitTreeState:"clean", BuildDate:"2018-01-18T09:42:01Z", GoVersion:"go1.9.2", Compiler:"gc", Platform:"linux/amd64"}
 
 ``` 
 
 ## CRIO
-github.com/kubernetes-incubator/cri-o: v1.0.0
+github.com/kubernetes-incubator/cri-o: v1.9.0
 
 ## Clear Containers
 
-github.com/clearcontainers/proxy: v3.0.4
+github.com/clearcontainers/proxy: v3.0.21
 
-github.com/clearcontainers/runtime: v3.0.4
+github.com/clearcontainers/runtime: v3.0.21
 
-github.com/clearcontainers/shim: v3.0.4
+github.com/clearcontainers/shim: v3.0.21
 
 
 # Installation Steps
 
-1. go 1.8.3:
+1. go 1.9.2:
 ```
-wget https://storage.googleapis.com/golang/go1.8.3.linux-amd64.tar.gz
-sudo tar -xvf go1.8.3.linux-amd64.tar.gz -C /usr/local/
+wget https://storage.googleapis.com/golang/go1.9.2.linux-amd64.tar.gz
+sudo tar -xvf go1.9.2.linux-amd64.tar.gz -C /usr/local/
 mkdir -p $HOME/go/src
 export GOPATH=$HOME/go
 export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
@@ -80,7 +80,6 @@ go version
 2. Clone clearcontainers/tests repository
 ```
 go get github.com/clearcontainers/tests
-cd $GOPATH/src/github.com/clearcontainers/tests/integration/kubernetes
 ```
 
 3. Execute the setup
@@ -88,11 +87,13 @@ cd $GOPATH/src/github.com/clearcontainers/tests/integration/kubernetes
     This step will install Kubernetes, CRI-O, Clear Containers components and will make
     correct configurations to run Kubernetes on top of Clear Containers.
 ```
-./setup.sh
+cd $GOPATH/src/github.com/clearcontainers/tests
+.ci/setup.sh
 ```
 4. Initialize Kubernetes
 
 ```
+cd $GOPATH/src/github.com/clearcontainers/tests/integration/kubernetes
 ./init.sh 
 ```
 
